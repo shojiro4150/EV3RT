@@ -276,7 +276,8 @@ public:
                 break;
             case CL_BLUE:
                 if (cur_rgb.b - cur_rgb.r > 45 && cur_rgb.b <= 255 && cur_rgb.r <= 255) {
-                    _log("ODO=%05d, CL_BLUE detected.", plotter->getDistance());
+                    _log("ODO=%05d, CL_BLUE detected.", plotter->getDistance())
+                    _log("r=%d b=%d c=%d",cur_rgb.b,cur_rgb.r,cur_rgb.g);
                     return Status::Success;
                 }else{
                     _log("r=%d b=%d c=%d",cur_rgb.b,cur_rgb.r,cur_rgb.g);
