@@ -696,6 +696,7 @@ void update_task(intptr_t unused) {
     ER ercd;
 
     colorSensor->sense();
+    _log("r=%d g=%d b=%d",filtered_rgb.r,filtered_rgb.g,filtered_rgb.b);
     plotter->plot();
 
 /*
