@@ -275,7 +275,7 @@ public:
                 }
                 break;
             case CL_BLUE:
-                if (cur_rgb.b - cur_rgb.r > 20 && cur_rgb.b <= 255 && cur_rgb.r <= 255) {
+                if (cur_rgb.r < 20 && cur_rgb.b <= 40 && cur_rgb.r <= 70) {
                     _log("ODO=%05d, CL_BLUE detected.", plotter->getDistance());
                     _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
                     return Status::Success;
@@ -617,7 +617,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::MemSequence>()
                 .leaf<IsColorDetected>(CL_BLUE)
             .end()
-            .leaf<TraceLine>(0, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+            .leaf<RunAsInstructed>(60,60,0.0) 
         .end()
         .build();
 
@@ -628,7 +628,7 @@ void main_task(intptr_t unused) {
             .leaf<SetArmPosition>(10, 40)
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(3000000) // break after 10 seconds
-                .leaf<RunAsInstructed>(70,70,0.0)      
+                .leaf<TraceLine>(0, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)     
             .end()          
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(10000000) // break after 10 seconds
