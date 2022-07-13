@@ -275,9 +275,12 @@ public:
                 }
                 break;
             case CL_BLUE:
-                if (cur_rgb.b - cur_rgb.r > 40 && cur_rgb.b <= 255 && cur_rgb.r <= 255) {
+                if (cur_rgb.b - cur_rgb.r > 20 && cur_rgb.b <= 255 && cur_rgb.r <= 255) {
                     _log("ODO=%05d, CL_BLUE detected.", plotter->getDistance());
+                    _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
                     return Status::Success;
+                }else{
+                    _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
                 }
                 break;
             case CL_RED:
@@ -610,7 +613,7 @@ void main_task(intptr_t unused) {
             ToDo: earned distance is not calculated properly parhaps because the task is NOT invoked every 10ms as defined in app.h on RasPike.
               Identify a realistic PERIOD_UPD_TSK.  It also impacts PID calculation.
             */
-            .leaf<IsTimeEarned>(100000)
+            .leaf<IsTimeEarned>(10000000)
             .composite<BrainTree::MemSequence>()
                 .leaf<IsColorDetected>(CL_BLUE)
             .end()
@@ -696,7 +699,6 @@ void update_task(intptr_t unused) {
     ER ercd;
 
     colorSensor->sense();
-    _log("r=%d g=%d b=%d",filtered_rgb.r,filtered_rgb.g,filtered_rgb.b);
     plotter->plot();
 
 /*
