@@ -617,7 +617,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::MemSequence>()
                 .leaf<IsColorDetected>(CL_BLUE)
             .end()
-            .leaf<RunAsInstructed>(35,35,0.0) 
+            .leaf<RunAsInstructed>(45,45,0.0) 
         .end()
         .build();
 
