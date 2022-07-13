@@ -35,6 +35,7 @@ void FilteredColorSensor::sense() {
     filtered_rgb.r = fir_r->Execute(filtered_rgb.r);
     filtered_rgb.g = fir_g->Execute(filtered_rgb.g);
     filtered_rgb.b = fir_b->Execute(filtered_rgb.b);
+    _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
     /* decrement counter */
     fillFIR--;
 }
