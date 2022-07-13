@@ -33,5 +33,4 @@ void FilteredColorSensor::sense() {
     } else {
         filtered_rgb.b = fil_b->apply(original_rgb.b);
     }
-    _log("r=%d g=%d b=%d",filtered_rgb.r,filtered_rgb.g,filtered_rgb.b);
 }
