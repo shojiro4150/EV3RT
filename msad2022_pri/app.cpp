@@ -632,6 +632,10 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(-60,-60,0.0)    
                 .leaf<IsColorDetected>(CL_BLACK)  
             .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsTimeEarned>(500000) // break after 10 seconds
+                .leaf<RunAsInstructed>(80,-40,0.0)      
+            .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .leaf<SetArmPosition>(10, 40)
