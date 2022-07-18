@@ -621,12 +621,12 @@ void main_task(intptr_t unused) {
     tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1600000) // break after 10 seconds
+                .leaf<IsTimeEarned>(1650000) // break after 10 seconds
                 .leaf<RunAsInstructed>(-40,-80,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(4000000) // break after 10 seconds
-                .leaf<RunAsInstructed>(-40,-50,0.0)    
+                .leaf<RunAsInstructed>(-50,-50,0.0)    
                 .leaf<IsColorDetected>(CL_BLACK)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
