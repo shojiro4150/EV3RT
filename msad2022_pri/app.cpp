@@ -299,7 +299,7 @@ public:
                 }
                 break;
             case CL_GRAY:
-                if (cur_rgb.r >= 40 && cur_rgb.g >=50 && cur_rgb.b >= 50 && cur_rgb.r - cur_rgb.b >= 10) {
+                if (cur_rgb.r >= 43 && cur_rgb.g <=55 && cur_rgb.b <= 60 && cur_rgb.r <= 45) {
                     _log("ODO=%05d, CL_GRAY detected.", plotter->getDistance());
                     return Status::Success;
                 }
