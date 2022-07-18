@@ -634,7 +634,6 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(-40,80,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(5000000)
                 .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_GRAY)  
             .end()
