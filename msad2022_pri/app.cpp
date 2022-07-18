@@ -651,7 +651,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
-                .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+                .leaf<TraceLine>(47, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_WHITE)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -668,7 +668,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_WHITE)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1100000) // break after 10 seconds
+                .leaf<IsTimeEarned>(1200000) // break after 10 seconds
                 .leaf<RunAsInstructed>(75,-60,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
