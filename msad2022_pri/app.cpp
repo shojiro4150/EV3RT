@@ -631,7 +631,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(700000) // break after 10 seconds
-                .leaf<RunAsInstructed>(-50,80,0.0)      
+                .leaf<RunAsInstructed>(-40,80,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
