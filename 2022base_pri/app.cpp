@@ -263,7 +263,7 @@ public:
 
         switch(color){
             case CL_JETBLACK:
-                if (cur_rgb.r <=35 && cur_rgb.g <=35 && cur_rgb.b <=50) { 
+                if (cur_rgb.r <= 10 && cur_rgb.g <= 10 && cur_rgb.b <= 10) { 
                     _log("ODO=%05d, CL_JETBLACK detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -585,7 +585,16 @@ void main_task(intptr_t unused) {
             //.decorator<BrainTree::UntilSuccess>()
             //    .leaf<IsTouchOn>()
             //.end()
-            .leaf<ResetClock>()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsTimeEarned>(700000)
+                .leaf<TraceLine>(50, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsTimeEarned>(1000000) // break after 10 seconds
+                .leaf<RunAsInstructed>(60,40,0.0)   
+            .end()
+            .leaf<StopNow>()
+            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
         .end()
         .build();
 
@@ -604,13 +613,15 @@ void main_task(intptr_t unused) {
 
 #else /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
     tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder()
-        .composite<BrainTree::ParallelSequence>(1,3)
-            .leaf<IsBackOn>()
+        .composite<BrainTree::MemSequence>()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+                .leaf<IsColorDetected>(CL_GRAY)  
+            .end()
             /*
             ToDo: earned distance is not calculated properly parhaps because the task is NOT invoked every 10ms as defined in app.h on RasPike.
               Identify a realistic PERIOD_UPD_TSK.  It also impacts PID calculation.
             */
-            .leaf<IsDistanceEarned>(4000)
             .composite<BrainTree::MemSequence>()
                 .leaf<IsColorDetected>(CL_BLACK)
                 .leaf<IsColorDetected>(CL_BLUE)
