@@ -269,7 +269,7 @@ public:
                 }
                 break;
             case CL_BLACK:
-                if (cur_rgb.r <=50 && cur_rgb.g <=45 && cur_rgb.b <=60) {
+                if (cur_rgb.r <=10 && cur_rgb.g <=10 && cur_rgb.b <=10) {
                     _log("ODO=%05d, CL_BLACK detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -618,6 +618,15 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLACK)
                 .leaf<RunAsInstructed>(60,45,0.0)   
             .end() 
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsTimeEarned>(500000)
+                .leaf<RunAsInstructed>(60,60,0.0)   
+            .end() 
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsTimeEarned>(1000000)
+                .leaf<IsColorDetected>(CL_BLACK)
+                .leaf<TraceLine>(50, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+            .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .composite<BrainTree::ParallelSequence>(1,3)
