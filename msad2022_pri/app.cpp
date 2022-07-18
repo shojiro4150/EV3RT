@@ -287,7 +287,7 @@ public:
                 }
                 break;
             case CL_YELLOW:
-                if (cur_rgb.r + cur_rgb.g - cur_rgb.b >= 130 &&  cur_rgb.r - cur_rgb.g <= 30) {
+                if (cur_rgb.r >= 100 &&  cur_rgb.g >= 100 && cur_rgb.b <= 70) {
                     _log("ODO=%05d, CL_YELLOW detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -678,7 +678,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<RunAsInstructed>(50,50,0.0)   
-                .leaf<IsColorDetected>(CL_WHITE)  
+                .leaf<IsColorDetected>(CL_YELLOW)  
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
