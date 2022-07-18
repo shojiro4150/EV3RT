@@ -610,11 +610,11 @@ void main_task(intptr_t unused) {
             ToDo: earned distance is not calculated properly parhaps because the task is NOT invoked every 10ms as defined in app.h on RasPike.
               Identify a realistic PERIOD_UPD_TSK.  It also impacts PID calculation.
             */
-            .leaf<IsTimeEarned>(1000000)
+            .leaf<IsTimeEarned>(1500000)
             .composite<BrainTree::MemSequence>()
                 .leaf<IsColorDetected>(CL_GRAY)
             .end()
-            .leaf<TraceLine>(0, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+            .leaf<TraceLine>(60, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
         .end()
         .build();
 
