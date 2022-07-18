@@ -620,6 +620,8 @@ void main_task(intptr_t unused) {
 
     tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
+            .leaf<StopNow>()
+            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(2000000) // break after 10 seconds
                 .leaf<RunAsInstructed>(-40,-80,0.0)      
