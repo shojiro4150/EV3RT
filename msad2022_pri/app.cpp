@@ -299,7 +299,7 @@ public:
                 }
                 break;
             case CL_GRAY:
-                if (cur_rgb.r >= 40 && cur_rgb.g >=50 && cur_rgb.b >= 50 && cur_rgb.b <= 70) {
+                if (cur_rgb.r >= 40 && cur_rgb.g >=50 && cur_rgb.b >= 50 && cur_rgb.r - cur_rgb.b >= 10) {
                     _log("ODO=%05d, CL_GRAY detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -610,7 +610,7 @@ void main_task(intptr_t unused) {
             ToDo: earned distance is not calculated properly parhaps because the task is NOT invoked every 10ms as defined in app.h on RasPike.
               Identify a realistic PERIOD_UPD_TSK.  It also impacts PID calculation.
             */
-            .leaf<IsTimeEarned>(1500000)
+            .leaf<IsTimeEarned>(1000000)
             .composite<BrainTree::MemSequence>()
                 .leaf<IsColorDetected>(CL_GRAY)
             .end()
@@ -620,6 +620,8 @@ void main_task(intptr_t unused) {
 
     tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
+            .leaf<StopNow>()
+            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1600000) // break after 10 seconds
                 .leaf<RunAsInstructed>(-40,-80,0.0)      
