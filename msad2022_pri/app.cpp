@@ -655,6 +655,15 @@ void main_task(intptr_t unused) {
                 .leaf<TraceLine>(50, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_WHITE)  
             .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsTimeEarned>(500000) // break after 10 seconds
+                .leaf<RunAsInstructed>(70,-70,0.0)      
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsTimeEarned>(5000000)
+                .leaf<RunAsInstructed>(50,50,0.0)   
+                .leaf<IsColorDetected>(CL_WHITE)  
+            .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .leaf<SetArmPosition>(10, 40)
