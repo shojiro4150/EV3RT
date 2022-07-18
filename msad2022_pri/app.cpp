@@ -639,11 +639,11 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_GRAY)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1000000) // break after 10 seconds
+                .leaf<IsTimeEarned>(500000) // break after 10 seconds
                 .leaf<RunAsInstructed>(50,50,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(2000000) // break after 10 seconds
+                .leaf<IsTimeEarned>(2500000) // break after 10 seconds
                 .leaf<RunAsInstructed>(-60,60,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
