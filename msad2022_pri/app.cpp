@@ -46,6 +46,7 @@ BrainTree::BehaviorTree* tr_block_b     = nullptr;
 BrainTree::BehaviorTree* tr_block_y     = nullptr;
 BrainTree::BehaviorTree* tr_block_d     = nullptr;
 BrainTree::BehaviorTree* tr_block_d2    = nullptr;
+
 State state = ST_INITIAL;
 
 /*
@@ -597,7 +598,6 @@ public:
                 armMotor->setPWM(30);
                 leftMotor->setPWM(23);
                 rightMotor->setPWM(23);
-
                 if (curAngle < -9) {
                     prevAngle = curAngle;
                 }
