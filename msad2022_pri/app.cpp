@@ -642,7 +642,7 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(50,50,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1800000) // break after 10 seconds
+                .leaf<IsTimeEarned>(1700000) // break after 10 seconds
                 .leaf<RunAsInstructed>(70,40,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -653,7 +653,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1750000) // break after 10 seconds
-                .leaf<RunAsInstructed>(-60,70,0.0)      
+                .leaf<RunAsInstructed>(-65,75,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_YELLOW) 
