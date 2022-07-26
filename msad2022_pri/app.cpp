@@ -1457,7 +1457,7 @@ void main_task(intptr_t unused) {
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
         .end()
-        .build();
+    .build();
 
     tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
