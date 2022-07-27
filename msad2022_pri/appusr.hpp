@@ -96,7 +96,7 @@ extern Plotter*     plotter;
 #endif
 
 #ifndef JUMP
-#define JUMP                    1
+#define JUMP                    0
 #endif
 
 #ifndef JUMPC
