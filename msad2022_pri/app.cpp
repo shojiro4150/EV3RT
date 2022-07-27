@@ -315,7 +315,7 @@ public:
                 break;
             case CL_BLUE2:
                 if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {
-                    _log("ODO=%05d, CL_WHITE detected.", plotter->getDistance());
+                    _log("ODO=%05d, CL_BLUE2 detected.", plotter->getDistance());
                     return Status::Success;
                 }
                 break;
@@ -662,7 +662,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsTimeEarned>(5000000) // break after 10 seconds
                 .leaf<RunAsInstructed>(50,50,0.0)    
                 .leaf<IsColorDetected>(CL_BLACK)  
-                .leaf<IsColorDetected>(CL_WHITE)     
+                .leaf<IsColorDetected>(CL_BLUE2)     
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) // break after 10 seconds
@@ -720,7 +720,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<TraceLine>(47, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
-                .leaf<IsColorDetected>(CL_WHITE)  
+                .leaf<IsColorDetected>(CL_BLUE2)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(450000) // break after 10 seconds
@@ -733,7 +733,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<RunAsInstructed>(45,45,0.0)   
-                .leaf<IsColorDetected>(CL_WHITE)  
+                .leaf<IsColorDetected>(CL_BLUE2)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) // break after 10 seconds
@@ -788,7 +788,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<TraceLine>(47, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
-                .leaf<IsColorDetected>(CL_WHITE)  
+                .leaf<IsColorDetected>(CL_BLUE2)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(450000) // break after 10 seconds
@@ -801,7 +801,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<RunAsInstructed>(45,45,0.0)   
-                .leaf<IsColorDetected>(CL_WHITE)  
+                .leaf<IsColorDetected>(CL_BLUE2)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) // break after 10 seconds
@@ -814,7 +814,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<RunAsInstructed>(50,50,0.0)   
-                .leaf<IsColorDetected>(CL_WHITE)  
+                .leaf<IsColorDetected>(CL_BLUE2)  
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
@@ -856,7 +856,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<TraceLine>(47, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
-                .leaf<IsColorDetected>(CL_WHITE)  
+                .leaf<IsColorDetected>(CL_BLUE2)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(450000) // break after 10 seconds
@@ -869,7 +869,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<RunAsInstructed>(45,45,0.0)   
-                .leaf<IsColorDetected>(CL_WHITE)  
+                .leaf<IsColorDetected>(CL_BLUE2)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) // break after 10 seconds
