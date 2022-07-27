@@ -962,7 +962,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
                 switch (JUMP) { /* JUMP = 1... is for testing only */
                     case 1:
-                        state = ST_BLOCK;
+                        state = ST_BLOCK_R;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK");
                         break;
                     default:
@@ -988,23 +988,23 @@ void update_task(intptr_t unused) {
                 switch (JUMPC) { /* JUMP = 1... is for testing only */
                     case 1:
                         state = ST_BLOCK_R;
-                        _log("State changed: ST_CALIBRATION to ST_BLOCK");
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_R");
                         break;
                     case 2:
                         state = ST_BLOCK_G;
-                        _log("State changed: ST_CALIBRATION to ST_BLOCK");
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_G");
                         break;
                     case 3:
                         state = ST_BLOCK_B;
-                        _log("State changed: ST_CALIBRATION to ST_BLOCK");
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_B");
                         break;
                     case 4:
                         state = ST_BLOCK_Y;
-                        _log("State changed: ST_CALIBRATION to ST_BLOCK");
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_Y");
                         break;
                     default:
                         state = ST_BLOCK_G;
-                        _log("State changed: ST_CALIBRATION to ST_RUN");
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_X");
                         break;
                 }
                 break;
