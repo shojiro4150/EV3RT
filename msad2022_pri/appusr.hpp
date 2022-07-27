@@ -139,6 +139,7 @@ enum State {
     ST_BLOCK_G,
     ST_BLOCK_B,
     ST_BLOCK_Y,
+    ST_BLOCK_D,
     ST_ENDING,
     ST_END,
 };
