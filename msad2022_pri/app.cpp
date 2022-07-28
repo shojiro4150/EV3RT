@@ -948,6 +948,10 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(-30,-80,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsTimeEarned>(1000000) // 後ろ向き走行。狙いは黒線。
+                .leaf<RunAsInstructed>(-40,-40,0.0)    
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(4000000) // 後ろ向き走行。狙いは黒線。
                 .leaf<RunAsInstructed>(-40,-40,0.0)    
                 .leaf<IsColorDetected>(CL_BLACK)  
