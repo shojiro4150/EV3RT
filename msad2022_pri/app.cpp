@@ -363,7 +363,7 @@ public:
                     return Status::Success;
                 }
             case CL_BLUE2:
-                if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {
+                if (cur_rgb.r <= 30 && cur_rgb.g <= 60 && cur_rgb.b >= 50 && cur_rgb.b - cur_rgb.r > 20) {
                     _log("ODO=%05d, CL_BLUE2 detected.", plotter->getDistance());
                     return Status::Success;
                 }
