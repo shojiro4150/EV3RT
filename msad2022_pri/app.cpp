@@ -1356,6 +1356,10 @@ void update_task(intptr_t unused) {
                         state = ST_BLOCK_R;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
                         break;
+                    case 7:
+                        state = ST_BLOCK_G;
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
+                        break;
                     default:
                         state = ST_RUN;
                         _log("State changed: ST_CALIBRATION to ST_RUN");
