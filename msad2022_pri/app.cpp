@@ -945,8 +945,10 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1650000) // 後ろ向き走行。狙いは黒線。
-                .leaf<RunAsInstructed>(-40,-83,0.0)      
+                .leaf<RunAsInstructed>(-30,-60,0.0)      
             .end()
+            .leaf<StopNow>()
+            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(4000000) // 後ろ向き走行。狙いは黒線。
                 .leaf<RunAsInstructed>(-50,-50,0.0)    
