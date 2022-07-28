@@ -992,11 +992,9 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(40,70,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)   
-                .leaf<IsTimeEarned>(1000000) // 黄色検知後、方向立て直す。
+                .leaf<IsTimeEarned>(900000) // 黄色検知後、方向立て直す。
                 .leaf<RunAsInstructed>(40,90,0.0)      
             .end()
-            .leaf<StopNow>()
-            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .composite<BrainTree::ParallelSequence>(1,3) 
                 .leaf<IsColorDetected>(CL_RED)  //赤検知までまっすぐ進む。
                 .leaf<RunAsInstructed>(50,50,0.0)      
