@@ -940,6 +940,10 @@ void main_task(intptr_t unused) {
     tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+                .leaf<IsColorDetected>(CL_BLUE) 
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1650000) // 後ろ向き走行。狙いは黒線。
                 .leaf<RunAsInstructed>(-40,-83,0.0)      
             .end()
@@ -1317,6 +1321,10 @@ void update_task(intptr_t unused) {
                         break;
                     case 5:
                         state = ST_BLOCK_D;
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
+                        break;
+                    case 6:
+                        state = ST_BLOCK_R;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
                         break;
                     default:

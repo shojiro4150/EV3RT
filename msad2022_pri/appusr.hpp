@@ -103,7 +103,7 @@ static int _COURSE;
 #endif
 
 #ifndef JUMP
-#define JUMP                    0
+#define JUMP                    6
 #endif
 
 #ifndef JUMPC
