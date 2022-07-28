@@ -107,7 +107,7 @@ static int _COURSE;
 #endif
 
 #ifndef JUMPC
-#define JUMPC                   1
+#define JUMPC                   2
 #endif
 
 #ifndef LOG_INTERVAL
