@@ -106,8 +106,12 @@ static int _COURSE;
 #define JUMP                    2
 #endif
 
-#ifndef JUMPC
-#define JUMPC                   1
+#ifndef JUMP_GARAGE
+#define JUMP_GARAGE             5
+#endif
+
+#ifndef JUMP_SLALOM
+#define JUMP_SLALOM             false
 #endif
 
 #ifndef LOG_INTERVAL
