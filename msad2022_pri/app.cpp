@@ -953,8 +953,8 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLACK)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(890000) // 黒線検知後、ライントレース準備
-                .leaf<RunAsInstructed>(-30,75,0.0)      
+                .leaf<IsTimeEarned>(600000) // 黒線検知後、ライントレース準備
+                .leaf<RunAsInstructed>(-30,60,0.0)      
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
