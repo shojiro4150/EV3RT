@@ -328,7 +328,7 @@ public:
                 }
                 break;
             case CL_RED:
-                if (cur_rgb.r - cur_rgb.b >= 30 && cur_rgb.r > 90 && cur_rgb.g < 40) {
+                if (cur_rgb.r - cur_rgb.b >= 30 && cur_rgb.r > 85 && cur_rgb.g < 45) {
                     _log("ODO=%05d, CL_RED detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -993,7 +993,8 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)   
                 .leaf<IsTimeEarned>(900000) // 黄色検知後、方向立て直す。
-                .leaf<RunAsInstructed>(40,80,0.0)      
+                .leaf<RunAsInstructed>(40,80,0.0) 
+                .leaf<IsColorDetected>(CL_RED)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3) 
                 .leaf<IsColorDetected>(CL_RED)  //赤検知までまっすぐ進む。
