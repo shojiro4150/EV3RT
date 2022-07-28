@@ -1037,12 +1037,12 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(40,40,0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(550000) // break after 10 seconds
+                .leaf<IsTimeEarned>(600000) // break after 10 seconds
                 .leaf<RunAsInstructed>(-50,50,0.0) //左に旋回。ライントレース準備。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(700000) //少し前進。ライントレース準備。
-                .leaf<RunAsInstructed>(40,40,0.0)      
+                .leaf<IsTimeEarned>(1000000) //少し前進。ライントレース準備。
+                .leaf<RunAsInstructed>(40,50,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
