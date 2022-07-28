@@ -328,7 +328,7 @@ public:
                 }
                 break;
             case CL_RED:
-                if (cur_rgb.r - cur_rgb.b >= 30 && cur_rgb.r > 85 && cur_rgb.g < 45) {
+                if (cur_rgb.r - cur_rgb.b >= 30 && cur_rgb.r > 80 && cur_rgb.g < 45) {
                     _log("ODO=%05d, CL_RED detected.", plotter->getDistance());
                     return Status::Success;
                 }
