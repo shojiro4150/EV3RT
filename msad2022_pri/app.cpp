@@ -965,19 +965,21 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(50,50,0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1700000) // 本線ラインに戻ってくる
+                .leaf<IsTimeEarned>(1200000) // 本線ラインに戻ってくる
                 .leaf<RunAsInstructed>(70,40,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) // 本線ラインに戻ってくる
-                .leaf<RunAsInstructed>(50,50,0.0)     
+                .leaf<RunAsInstructed>(40,40,0.0)     
             .end()
              .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000) // 本線ラインに戻ってくる。黒ラインか青ライン検知
-                .leaf<RunAsInstructed>(50,50,0.0)    
+                .leaf<RunAsInstructed>(40,40,0.0)    
                 .leaf<IsColorDetected>(CL_BLACK)  
                 .leaf<IsColorDetected>(CL_BLUE2)     
             .end()
+            .leaf<StopNow>()
+            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) // 検知後、斜め右前まで回転(ブロックを離さないように)
                 .leaf<RunAsInstructed>(-65,70,0.0)      
