@@ -978,12 +978,12 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLACK)  
                 .leaf<IsColorDetected>(CL_BLUE2)     
             .end()
-            .leaf<StopNow>()
-            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) // 検知後、斜め右前まで回転(ブロックを離さないように)
                 .leaf<RunAsInstructed>(-65,70,0.0)      
             .end()
+            .leaf<StopNow>()
+            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_YELLOW)    
                 .leaf<IsTimeEarned>(5000000) // 全身しながら大きく左に向けて旋回。黄色を目指す。
