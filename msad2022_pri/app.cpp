@@ -944,8 +944,8 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE) 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1650000) // 後ろ向き走行。狙いは黒線。
-                .leaf<RunAsInstructed>(-30,-60,0.0)      
+                .leaf<IsTimeEarned>(20000000) // 後ろ向き走行。狙いは黒線。
+                .leaf<RunAsInstructed>(-30,-80,0.0)      
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
