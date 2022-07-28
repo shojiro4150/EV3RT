@@ -334,7 +334,7 @@ public:
                 }
                 break;
             case CL_YELLOW:
-                if (cur_rgb.r >= 100 &&  cur_rgb.g >= 100 && cur_rgb.b <= 70) {
+                if (cur_rgb.r >= 90 &&  cur_rgb.g >= 90 && cur_rgb.b <= 75) {
                     _log("ODO=%05d, CL_YELLOW detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -989,7 +989,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_YELLOW)    
                 .leaf<IsTimeEarned>(2000000) // 全身しながら大きく左に向けて旋回。黄色を目指す。
-                .leaf<RunAsInstructed>(40,60,0.0)      
+                .leaf<RunAsInstructed>(40,70,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)   
                 .leaf<IsTimeEarned>(900000) // 黄色検知後、方向立て直す。
