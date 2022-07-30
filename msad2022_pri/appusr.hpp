@@ -1,7 +1,7 @@
 /*
     appusr.hpp
 
-    Copyright © 2022 MSAD Mode2P. All rights reserved.
+    Copyright © 2021 Wataru Taniguchi. All rights reserved.
 */
 #ifndef appusr_hpp
 #define appusr_hpp
@@ -162,9 +162,8 @@ enum State {
 };
 
 enum TraceSide {
-    TS_NORMAL = 0,
-    TS_OPPOSITE = 1,
-    TS_CENTER = 2,
+    TS_NORMAL,
+    TS_OPPOSITE,
 };
 
 #endif /* appusr_hpp */
