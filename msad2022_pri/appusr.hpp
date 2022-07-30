@@ -102,16 +102,16 @@ static int _COURSE;
 #define D_CONST                 0.08D
 #endif
 
-#ifndef JUMP
-#define JUMP                    7
-#endif
-
-#ifndef JUMP_GARAGE
-#define JUMP_GARAGE             5
+#ifndef JUMP_CALIBRATION
+#define JUMP_CALIBRATION        7
 #endif
 
 #ifndef JUMP_SLALOM
 #define JUMP_SLALOM             false
+#endif
+
+#ifndef JUMP_BLOCK
+#define JUMP_BLOCK              5
 #endif
 
 #ifndef LOG_INTERVAL
@@ -152,7 +152,6 @@ enum State {
     ST_SLALOM_CHECK,
     ST_SLALOM_SECOND_A,
     ST_SLALOM_SECOND_B,
-    ST_BLOCK,
     ST_BLOCK_R,
     ST_BLOCK_G,
     ST_BLOCK_B,

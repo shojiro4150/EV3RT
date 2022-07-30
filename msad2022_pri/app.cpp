@@ -371,6 +371,14 @@ public:
                 break;
             default:
                 break;
+            case CL_BLUE2:
+                if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {
+                    _log("ODO=%05d, CL_BLUE2 detected.", plotter->getDistance());
+                    return Status::Success;
+                }
+                break;
+            default:
+                break;
         }
         return Status::Running;
     }
@@ -1364,9 +1372,9 @@ void update_task(intptr_t unused) {
     ER ercd;
 
     colorSensor->sense();
-    //rgb_raw_t cur_rgb;
-    //colorSensor->getRawColor(cur_rgb);
-    //_log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
+    rgb_raw_t cur_rgb;
+    colorSensor->getRawColor(cur_rgb);
+    _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
     plotter->plot();
     
 /*
@@ -1381,7 +1389,7 @@ void update_task(intptr_t unused) {
             status = tr_calibration->update();
             switch (status) {
             case BrainTree::Node::Status::Success:
-                switch (JUMP) { /* JUMP = 1... is for testing only */
+                switch (JUMP_CALIBRATION) { /* JUMP_CALIBRATION = 1... is for testing only */
                     case 1:
                         state = ST_SLALOM_FIRST;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_FIRST");
@@ -1399,15 +1407,23 @@ void update_task(intptr_t unused) {
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_SECOND_B");
                         break;
                     case 5:
-                        state = ST_BLOCK_D;
-                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
+                        state = ST_BLOCK_R;
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_R");
                         break;
                     case 6:
-                        state = ST_BLOCK_R;
-                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
+                        state = ST_BLOCK_G;
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_G");
                         break;
                     case 7:
-                        state = ST_BLOCK_G;
+                        state = ST_BLOCK_B;
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_B");
+                        break;
+                    case 8:
+                        state = ST_BLOCK_Y;
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_Y");
+                        break;
+                    case 9:
+                        state = ST_BLOCK_D;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
                         break;
                     default:
@@ -1467,6 +1483,7 @@ void update_task(intptr_t unused) {
                 if (DetectSlalomPattern::isSlalomPatternA == true) {
                     // for test
                     if (JUMP_SLALOM == true) {
+                        _log("test only ST_SLALOM_CHECK.);
                         if (DetectSlalomPattern::earnedDistance == 0) {
                             _log("Failed to check slalom pattern.");
                         }
@@ -1484,6 +1501,7 @@ void update_task(intptr_t unused) {
                 } else {
                     // for test
                     if (JUMP_SLALOM == true) {
+                        _log("test only ST_SLALOM_CHECK.);
                         state = ST_ENDING;
                         _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::earnedDistance);
                         _log("State changed: ST_SLALOM_CHECK to ST_ENDING");
@@ -1508,7 +1526,7 @@ void update_task(intptr_t unused) {
             status = tr_slalom_second_a->update();
             switch (status) {
             case BrainTree::Node::Status::Success:
-                switch (JUMP_GARAGE) { /* JUMP_GARAGE = 1... is for testing only */
+                switch (JUMP_BLOCK) { /* JUMP_BLOCK = 1... is for testing only */
                     case 1:
                         state = ST_BLOCK_R;
                         _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_R");
@@ -1549,7 +1567,7 @@ void update_task(intptr_t unused) {
             status = tr_slalom_second_b->update();
             switch (status) {
             case BrainTree::Node::Status::Success:
-                switch (JUMP_GARAGE) { /* JUMP_GARAGE = 1... is for testing only */
+                switch (JUMP_BLOCK) { /* JUMP_BLOCK = 1... is for testing only */
                     case 1:
                         state = ST_BLOCK_R;
                         _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_R");
@@ -1584,7 +1602,6 @@ void update_task(intptr_t unused) {
                 break;
             }
         }
-        break;
     case ST_BLOCK_R:
         if (tr_block_r != nullptr) {
             status = tr_block_r->update();
@@ -1592,7 +1609,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_BLOCK to ST_ENDING");
+                _log("State changed: ST_BLOCK_R to ST_ENDING");
                 break;
             default:
                 break;
@@ -1606,7 +1623,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_BLOCK to ST_ENDING");
+                _log("State changed: ST_BLOCK_G to ST_ENDING");
                 break;
             default:
                 break;
@@ -1620,7 +1637,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_BLOCK to ST_ENDING");
+                _log("State changed: ST_BLOCK_B to ST_ENDING");
                 break;
             default:
                 break;
@@ -1634,7 +1651,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_BLOCK to ST_ENDING");
+                _log("State changed: ST_BLOCK_Y to ST_ENDING");
                 break;
             default:
                 break;
@@ -1648,7 +1665,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_BLOCK to ST_ENDING");
+                _log("State changed: ST_BLOCK_D to ST_ENDING");
                 break;
             default:
                 break;
