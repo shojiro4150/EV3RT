@@ -759,7 +759,7 @@ void main_task(intptr_t unused) {
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)
                    .leaf<IsTimeEarned>(65000000)
-                   .leaf<TraceLine>(51, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(50, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
     /*
     go straight
@@ -780,6 +780,8 @@ void main_task(intptr_t unused) {
                    .leaf<IsTimeEarned>(1900000)
                    .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
                 .end()
+    /*
+    to the final trace
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(15000000)
                    .leaf<TraceLine>(44, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
@@ -788,6 +790,7 @@ void main_task(intptr_t unused) {
                    .leaf<IsTimeEarned>(8000000)
                    .leaf<TraceLine>(80, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
                 .end()
+    */
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .composite<BrainTree::MemSequence>()
                       .leaf<IsColorDetected>(CL_BLACK)
