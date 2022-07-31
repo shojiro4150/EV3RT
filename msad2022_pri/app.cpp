@@ -1101,7 +1101,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)     
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(850000) // 検知後、斜め右前まで回転(ブロックを離さないように)
+                .leaf<IsTimeEarned>(650000) // 検知後、斜め右前まで回転(ブロックを離さないように)
                 .leaf<RunAsInstructed>(-55,60,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
