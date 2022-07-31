@@ -726,14 +726,14 @@ void main_task(intptr_t unused) {
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)
                    .leaf<IsTimeEarned>(18000000)
-                   .leaf<TraceLine>(41, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+                   .leaf<TraceLine>(43, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
                 .end()
     /*
     go straight
     */
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(1570000)
-                   .leaf<RunAsInstructed>(50,50, 0.0)
+                   .leaf<IsTimeEarned>(1270000)
+                   .leaf<RunAsInstructed>(80,80, 0.0)
                 .end()
     /*
     turn right
@@ -751,7 +751,7 @@ void main_task(intptr_t unused) {
                 .end()
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(2000000)
-                   .leaf<TraceLine>(42, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
     /*
     line trace till,next cross
@@ -774,7 +774,7 @@ void main_task(intptr_t unused) {
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(150000000)
                    .leaf<IsColorDetected>(CL_BLACK)
-                   .leaf<RunAsInstructed>(50,55, 0.0)
+                   .leaf<RunAsInstructed>(50,56, 0.0)
                 .end()
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(1900000)
@@ -785,7 +785,7 @@ void main_task(intptr_t unused) {
                       .leaf<IsColorDetected>(CL_BLACK)
                       .leaf<IsColorDetected>(CL_BLUE)
                    .end()
-                   .leaf<TraceLine>(41, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+                   .leaf<TraceLine>(43, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
                 .end()
             .end()
         .end()
