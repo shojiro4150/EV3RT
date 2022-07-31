@@ -45,6 +45,7 @@ BrainTree::BehaviorTree* tr_block_g     = nullptr;
 BrainTree::BehaviorTree* tr_block_b     = nullptr;
 BrainTree::BehaviorTree* tr_block_y     = nullptr;
 BrainTree::BehaviorTree* tr_block_d     = nullptr;
+BrainTree::BehaviorTree* tr_block_d2    = nullptr;
 State state = ST_INITIAL;
 
 /*
@@ -1299,6 +1300,22 @@ void main_task(intptr_t unused) {
         .end()
     .build();
 
+    tr_block_d2 = (BrainTree::BehaviorTree*) BrainTree::Builder()
+        .composite<BrainTree::MemSequence>()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<SetArmPosition>(10, 40) 
+                .leaf<IsTimeEarned>(500000) 
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<TraceLine>(0, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+                .leaf<IsTimeEarned>(10000000) 
+            .end()
+            .leaf<StopNow>()
+            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
+        .end()
+    .build();
+
+
     } /* if (prof->getValueAsStr("COURSE") == "R") */
 
 /*
@@ -1416,6 +1433,10 @@ void update_task(intptr_t unused) {
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_Y");
                         break;
                     case 9:
+                        state = ST_BLOCK_D;
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
+                        break;
+                    case 10:
                         state = ST_BLOCK_D;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
                         break;
@@ -1654,6 +1675,20 @@ void update_task(intptr_t unused) {
     case ST_BLOCK_D:
         if (tr_block_d != nullptr) {
             status = tr_block_d->update();
+            switch (status) {
+            case BrainTree::Node::Status::Success:
+            case BrainTree::Node::Status::Failure:
+                state = ST_ENDING;
+                _log("State changed: ST_BLOCK_D to ST_ENDING");
+                break;
+            default:
+                break;
+            }
+        }
+        break;
+    case ST_BLOCK_D2:
+        if (tr_block_d2 != nullptr) {
+            status = tr_block_d2->update();
             switch (status) {
             case BrainTree::Node::Status::Success:
             case BrainTree::Node::Status::Failure:
