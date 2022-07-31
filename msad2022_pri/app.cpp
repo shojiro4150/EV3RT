@@ -744,14 +744,14 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::ParallelSequence>(1,2)
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
-
+    /*
+    to the first cross
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)
                    .leaf<IsTimeEarned>(18000000)
                 .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
-    /*
-    to the first cross
+     */
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)
                    .leaf<IsTimeEarned>(18000000)
@@ -760,8 +760,7 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("I_CONST"), 
                    prof->getValueAsNum("D_CONST"), 0.0, TS_OPPOSITE)
                 .end()
-    go straight
-    */
+
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(700000)
                    .leaf<RunAsInstructed>(80,80, 0.0)
