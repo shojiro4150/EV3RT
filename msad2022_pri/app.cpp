@@ -1089,6 +1089,7 @@ void main_task(intptr_t unused) {
                 .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース 
             .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
                 .composite<BrainTree::MemSequence>()
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
                     .leaf<IsColorDetected>(CL_WHITE) //グレー検知までライントレース    
@@ -1250,6 +1251,7 @@ void main_task(intptr_t unused) {
                 .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース 
             .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
                 .composite<BrainTree::MemSequence>()
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
                     .leaf<IsColorDetected>(CL_WHITE) //グレー検知までライントレース    
