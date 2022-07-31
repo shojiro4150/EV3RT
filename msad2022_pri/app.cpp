@@ -732,7 +732,7 @@ void main_task(intptr_t unused) {
     go straight
     */
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(1270000)
+                   .leaf<IsTimeEarned>(870000)
                    .leaf<RunAsInstructed>(80,80, 0.0)
                 .end()
     /*
