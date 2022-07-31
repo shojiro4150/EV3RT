@@ -1171,7 +1171,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .composite<BrainTree::ParallelSequence>(1,3)
+                .composite<BrainTree::MemSequence>()
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
                     .leaf<IsColorDetected>(CL_WHITE) //グレー検知までライントレース    
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
