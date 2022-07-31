@@ -1194,7 +1194,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //前進。次の青検知を目指す。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(570000) //青検知後、大きく右旋回。向きを整える。
+                .leaf<IsTimeEarned>(575000) //青検知後、大きく右旋回。向きを整える。
                 .leaf<RunAsInstructed>(60,-55,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1203,7 +1203,7 @@ void main_task(intptr_t unused) {
             .end() 
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
-                .leaf<RunAsInstructed>(60,60,0.0) 
+                .leaf<RunAsInstructed>(50,50,0.0) 
                 .leaf<IsColorDetected>(CL_GREEN)  //検知後、停止。
             .end()
             .leaf<StopNow>()
@@ -1214,6 +1214,10 @@ void main_task(intptr_t unused) {
 
     tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<SetArmPosition>(10, 40) 
+                .leaf<IsTimeEarned>(500000) 
+            .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_BLUE) 
@@ -1275,7 +1279,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //前進。次の青検知を目指す。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(800000) //青検知後、大きく右旋回。向きを整える。
+                .leaf<IsTimeEarned>(575000) //青検知後、大きく右旋回。向きを整える。
                 .leaf<RunAsInstructed>(60,-55,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1360,7 +1364,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //前進。次の青検知を目指す。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(570000) //青検知後、大きく右旋回。向きを整える。
+                .leaf<IsTimeEarned>(575000) //青検知後、大きく右旋回。向きを整える。
                 .leaf<RunAsInstructed>(60,-55,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
