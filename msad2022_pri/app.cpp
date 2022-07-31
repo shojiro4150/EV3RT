@@ -736,7 +736,6 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("I_CONST"), 
                    prof->getValueAsNum("D_CONST"), 0.0, TS_OPPOSITE)
                 .end()
-    /*
     go straight
     */
                 .composite<BrainTree::ParallelSequence>(1,2)
