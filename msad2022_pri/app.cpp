@@ -354,7 +354,7 @@ public:
                 }
                 break;
             case CL_WHITE:
-                if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {
+                if (cur_rgb.r >= 100 && cur_rgb.g >= 100 && cur_rgb.b >= 100 ) {
                     _log("ODO=%05d, CL_WHITE detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -1171,13 +1171,13 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
+                .composite<BrainTree::ParallelSequence>(1,3)
+                    .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
+                    .leaf<IsColorDetected>(CL_WHITE) //グレー検知までライントレース    
+                    .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
+                .end()
                 .leaf<IsTimeEarned>(600000) // break after 10 seconds
                 .leaf<RunAsInstructed>(40,40,0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
-            .end()
-            .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(400000) // break after 10 seconds
-                .leaf<RunAsInstructed>(40,40,0.0)  //グレー検知後、丸穴あき部分があるため少し前進  
-                 .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(630000) // break after 10 seconds
