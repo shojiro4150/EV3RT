@@ -732,7 +732,7 @@ void main_task(intptr_t unused) {
     go straight
     */
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(870000)
+                   .leaf<IsTimeEarned>(800000)
                    .leaf<RunAsInstructed>(80,80, 0.0)
                 .end()
     /*
@@ -740,7 +740,7 @@ void main_task(intptr_t unused) {
     */
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(900000)
-                   .leaf<RunAsInstructed>(65,45, 0.0)
+                   .leaf<RunAsInstructed>(67,45, 0.0)
                 .end()
     /*
     till detect black,go right
