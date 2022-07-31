@@ -325,7 +325,7 @@ public:
                 }
                 break;
             case CL_BLUE:
-                if (cur_rgb.b - cur_rgb.r > 25 && cur_rgb.g >= 65 && cur_rgb.b <= 100) {
+                if (cur_rgb.b - cur_rgb.r > 25 && cur_rgb.g >= 55 && cur_rgb.b <= 100) {
                     _log("ODO=%05d, CL_BLUE detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -337,7 +337,7 @@ public:
                 }
                 break;
             case CL_BLUE2:
-                if (cur_rgb.r <= 30 && cur_rgb.g <= 60 && cur_rgb.b >= 50 && cur_rgb.b - cur_rgb.r > 20) {
+                if (cur_rgb.r <= 20 && cur_rgb.g <= 40 && cur_rgb.b >= 44 && cur_rgb.b - cur_rgb.r > 20) {
 //                if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {
                     _log("ODO=%05d, CL_BLUE2 detected.", plotter->getDistance());
                     return Status::Success;
@@ -382,7 +382,7 @@ public:
                 }   
                 break;
             case CL_GRAY:
-                if (cur_rgb.r >= 43 && cur_rgb.g <=55 && cur_rgb.b <= 60 && cur_rgb.r <= 45 && cur_rgb.b >= 55) {
+                if (cur_rgb.r >= 45 && cur_rgb.g <=60 && cur_rgb.b <= 65 && cur_rgb.r <= 52 && cur_rgb.b >= 53) {
                     _log("ODO=%05d, CL_GRAY detected.", plotter->getDistance());
                     return Status::Success;
                 }
