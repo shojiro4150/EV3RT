@@ -766,7 +766,7 @@ void main_task(intptr_t unused) {
     */
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(1620000)
-                   .leaf<RunAsInstructed>(60,74, 0.0)
+                   .leaf<RunAsInstructed>(60,69, 0.0)
                 .end()
     /*
     to the final trace
