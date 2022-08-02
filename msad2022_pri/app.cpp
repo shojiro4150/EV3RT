@@ -1266,7 +1266,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //純粋な青検知までライントレース
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsAngleLarger>(60)
+                .leaf<IsAngleLarger>(30)
                 .leaf<RunAsInstructed>(50,-50,0.0) //青検知後は大きく右に旋回    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
