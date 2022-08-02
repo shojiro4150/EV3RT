@@ -744,7 +744,7 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::ParallelSequence>(1,2)
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
-    /*GATE1を通過通過後ラインの交差地点を検知するまで*/
+    //GATE1を通過通過後ラインの交差地点を検知するまで
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
                    .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))//18秒
@@ -753,12 +753,12 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("I_CONST1"), 
                    prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
-    /*交差地点後にしばらく直進*/
+    //交差地点後にしばらく直進
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(700000)
                    .leaf<RunAsInstructed>(80,80, 0.0)
                 .end()
-    /*ゆるやかに右カーブ*/
+    //ゆるやかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(900000)
                    .leaf<RunAsInstructed>(67,45, 0.0)
@@ -803,6 +803,7 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
                    prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE)//ライントレース4,右のライン検知
+                .end()
     //2回カーブまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(6000000)
@@ -810,6 +811,7 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
                    prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE)//ライントレース5,右のライン検知
+                .end()
     //最終カーブまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(1000000)
@@ -817,6 +819,7 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
                    prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE)//ライントレース6,右のライン検知
+                .end()
     //スラロームに引き渡すまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .composite<BrainTree::MemSequence>()
