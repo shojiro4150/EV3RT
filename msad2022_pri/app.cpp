@@ -1266,7 +1266,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //純粋な青検知までライントレース
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsAngleLarger>(10)
+                .leaf<IsAngleLarger>(5)
                 .leaf<RunAsInstructed>(50,-50,0.0) //青検知後は大きく右に旋回    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1283,7 +1283,7 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(60,-55,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1000000)
+                .leaf<IsTimeEarned>(500000)
                 .leaf<TraceLine>(38, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
