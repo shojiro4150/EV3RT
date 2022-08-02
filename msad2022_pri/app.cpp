@@ -752,75 +752,82 @@ void main_task(intptr_t unused) {
                    .leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
-                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE) //ライントレース1
+                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE) //ライントレース1,右のライン検知
                 .end()
-
+　　 //交差地点後にしばらく直進
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(700000)
                    .leaf<RunAsInstructed>(80,80, 0.0)
                 .end()
-    /*
-    turn right
-    */
+    //ゆるやかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(900000)
                    .leaf<RunAsInstructed>(67,45, 0.0)
                 .end()
-    /*
-    till detect black,go right
-    */
+    //ライン検知するまでさらに緩やかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_BLACK)
                    .leaf<RunAsInstructed>(65,40, 0.0)
                 .end()
+    //ライン検知後にトレースを補正するために2秒速度を落とす
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(2000000)
-                   .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED2"), 
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 0.0, TS_NORMAL) //ライントレース2,左のライン検知
                 .end()
-    /*
-    line trace till,next cross
-    */
+    //ゲート2,3通過後にラインの交差点検知まで
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)
                    .leaf<IsTimeEarned>(65000000)
-                   .leaf<TraceLine>(44, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED3"), 
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 0.0, TS_NORMAL) //ライントレース3,左のライン検知
                 .end()
-    /*
-    go straight
-    */
+    //ライン交差点検知後に緩やかに左カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(1640000)
                    .leaf<RunAsInstructed>(60,69, 0.0)
                 .end()
-    /*
-    to the final trace
-    */
+    //ライン検知するまで緩やかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(150000000)
                    .leaf<IsColorDetected>(CL_BLACK)
                    .leaf<RunAsInstructed>(51,58, 0.0)
                 .end()
+    //ライン検知後にトレースを補正するために1.9秒速度を落とす
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(1900000)
-                   .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                .end()
-    /*
-    to the final trace
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED2"),
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE) //ライントレース4,右のライン検知
+    //2回カーブまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(15000000)
-                   .leaf<TraceLine>(44, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                .end()
+                   .leaf<IsTimeEarned>(6000000)
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED5"),
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE) //ライントレース5,右のライン検知
+    //最終カーブまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(8000000)
-                   .leaf<TraceLine>(80, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                .end()
-    */
+                   .leaf<IsTimeEarned>(1000000)
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED6"),
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE) //ライントレース6,右のライン検知
+    //スラロームに引き渡すまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .composite<BrainTree::MemSequence>()
                       .leaf<IsColorDetected>(CL_BLACK)
                       .leaf<IsColorDetected>(CL_BLUE)
                    .end()
-                   .leaf<TraceLine>(44, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED1"),
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE) //ファイナルライントレース,右のライン検知
                 .end()
             .end()
         .end()
