@@ -1216,7 +1216,7 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsAngleLarger>(75)
-                .leaf<RunAsInstructed>(55,-55,0.0)      
+                .leaf<RunAsInstructed>(-55,55,0.0)      
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
