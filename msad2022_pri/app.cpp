@@ -1215,7 +1215,7 @@ void main_task(intptr_t unused) {
     tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsAngleLarger>(75)
+                .leaf<IsAngleLarger>(-75)
                 .leaf<RunAsInstructed>(-55,55,0.0)      
             .end()
             .leaf<StopNow>()
