@@ -744,21 +744,15 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::ParallelSequence>(1,2)
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
-    /*
-    to the first cross
+    
+    //GATE1を通過ごラインの交差地点を検知するまで
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsColorDetected>(CL_JETBLACK_YMNK)
-                   .leaf<IsTimeEarned>(18000000)
-                .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
-                .end()
-     */
-                .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsColorDetected>(CL_JETBLACK_YMNK)
-                   .leaf<IsTimeEarned>(18000000)
-                   .leaf<TraceLine>(prof->getValueAsNum("SPEED"), 
-                   prof->getValueAsNum("GS_TARGET"), prof->getValueAsNum("P_CONST"), 
-                   prof->getValueAsNum("I_CONST"), 
-                   prof->getValueAsNum("D_CONST"), 0.0, TS_OPPOSITE)
+                   .leaf<IsColorDetected>(CL_JETBLACK_YMNK)　//JETBLACKを検知
+                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))　　　　　　　//18秒
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE) //ライントレース1
                 .end()
 
                 .composite<BrainTree::ParallelSequence>(1,2)
