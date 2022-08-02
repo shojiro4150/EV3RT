@@ -1215,12 +1215,6 @@ void main_task(intptr_t unused) {
     tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsAngleSmaller>(-150)
-                .leaf<RunAsInstructed>(-55,55,0.0)      
-            .end()
-            .leaf<StopNow>()
-            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
-            .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<SetArmPosition>(10, 40) 
                 .leaf<IsTimeEarned>(500000) 
             .end()
@@ -1243,7 +1237,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(980000) // 黒線検知後、ライントレース準備
-                .leaf<RunAsInstructed>(-30,60,0.0)      
+                .leaf<RunAsInstructed>(-30,60,0.5)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
@@ -1259,12 +1253,12 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(40,40,0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(650000) // break after 10 seconds
+                .leaf<IsAngleSmaller>(-50)
                 .leaf<RunAsInstructed>(-50,50,0.0) //左に旋回。ライントレース準備。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) //少し前進。ライントレース準備。
-                .leaf<RunAsInstructed>(40,40,0.0)      
+                .leaf<RunAsInstructed>(40,50,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
