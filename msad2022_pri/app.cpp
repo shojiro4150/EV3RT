@@ -1267,7 +1267,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsAngleLarger>(1)
-                .leaf<RunAsInstructed>(42,-42,0.0) //青検知後は大きく右に旋回    
+                .leaf<RunAsInstructed>(43,-43,0.0) //青検知後は大きく右に旋回    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000)
