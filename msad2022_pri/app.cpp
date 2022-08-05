@@ -1271,7 +1271,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000)
-                .leaf<RunAsInstructed>(40,60,0.0)   //前進。次の青検知を目指す。
+                .leaf<RunAsInstructed>(35,50,0.0)   //前進。次の青検知を目指す。
             .end() 
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
@@ -1279,7 +1279,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //前進。次の青検知を目指す。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsAngleLarger>(75)
+                .leaf<IsAngleLarger>(77)
                 .leaf<RunAsInstructed>(55,-55,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
