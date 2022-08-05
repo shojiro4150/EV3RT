@@ -819,7 +819,8 @@ void main_task(intptr_t unused) {
                    .leaf<TraceLine>(prof->getValueAsNum("SPEED6"),
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
-                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE)//ライントレース6,右のライン検知
+                   prof->getValueAsNum("D_CONST1"), 
+                   prof->getValueAsNum("srewrate"), TS_OPPOSITE)//ライントレース6,右のライン検知
                 .end()
     //スラロームに引き渡すまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
