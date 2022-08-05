@@ -746,7 +746,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::MemSequence>()
     //GATE1を通過通過後ラインの交差地点を検知するまで
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
+                   //.leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
                    .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))//18秒
                    .leaf<StopNow>()
                    //.leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
