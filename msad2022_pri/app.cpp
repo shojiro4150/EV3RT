@@ -788,14 +788,16 @@ void main_task(intptr_t unused) {
                 .end()
     //ライン交差点検知後に緩やかに左カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(1640000)
-                   .leaf<RunAsInstructed>(60,69, 0.0)
+                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME4"))
+                   .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L1"),
+                   prof->getValueAsNum("POWER_R1"), 0.0)
                 .end()
     //ライン検知するまで緩やかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(150000000)
                    .leaf<IsColorDetected>(CL_BLACK)
-                   .leaf<RunAsInstructed>(51,58, 0.0)
+                   .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L2"),
+                   prof->getValueAsNum("POWER_R2"), 0.0)
                 .end()
     //ライン検知後にトレースを補正するために1.9秒速度を落とす
                 .composite<BrainTree::ParallelSequence>(1,2)
