@@ -1236,11 +1236,11 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLACK)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(700000) // 黒線検知後、ライントレース準備
+                .leaf<IsTimeEarned>(650000) // 黒線検知後、ライントレース準備
                 .leaf<RunAsInstructed>(0,60,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+                .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.1, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
