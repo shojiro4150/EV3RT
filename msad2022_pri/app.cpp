@@ -1237,7 +1237,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsAngleSmaller>(-1)
-                .leaf<RunAsInstructed>(-50,50,0.0)      
+                .leaf<RunAsInstructed>(0,60,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
