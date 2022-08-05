@@ -807,7 +807,7 @@ void main_task(intptr_t unused) {
                 .end()
     //2回カーブまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(6000000)
+                   .leaf<IsTimeEarned>(7000000)
                    .leaf<TraceLine>(prof->getValueAsNum("SPEED5"),
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
