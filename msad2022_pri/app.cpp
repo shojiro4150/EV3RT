@@ -752,7 +752,8 @@ void main_task(intptr_t unused) {
                    .leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
-                   prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE)//ライントレース1,右のライン検知
+                   prof->getValueAsNum("D_CONST1"), 
+                   prof->getValueAsNum("srewrate2"), TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     //交差地点後にしばらく直進
                 .composite<BrainTree::ParallelSequence>(1,2)
