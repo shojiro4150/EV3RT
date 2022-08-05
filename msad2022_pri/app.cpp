@@ -1236,7 +1236,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLACK)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsAngleSmaller>(-1)
+                .leaf<IsTimeEarned>(980000) // 黒線検知後、ライントレース準備
                 .leaf<RunAsInstructed>(0,60,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
