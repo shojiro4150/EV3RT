@@ -1236,7 +1236,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLACK)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsAngleSmaller>(-5)
+                .leaf<IsAngleSmaller>(-1)
                 .leaf<RunAsInstructed>(-30,60,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
