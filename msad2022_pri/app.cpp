@@ -756,8 +756,9 @@ void main_task(intptr_t unused) {
                 .end()
     //交差地点後にしばらく直進
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(700000)
-                   .leaf<RunAsInstructed>(80,80, 0.0)
+                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME5"))
+                   .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L3"),
+                   prof->getValueAsNum("POWER_R3"), 0.0)
                 .end()
     //ゆるやかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
