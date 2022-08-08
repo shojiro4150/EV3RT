@@ -759,12 +759,12 @@ void main_task(intptr_t unused) {
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(prof->getValueAsNum("TIME5"))
                    .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L3"),
-                   prof->getValueAsNum("POWER_R3"), prof->getValueAsNum("srewrate2"))
+                   prof->getValueAsNum("POWER_R3"), 0.0)
                 .end()
     //ゆるやかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(900000)
-                   .leaf<RunAsInstructed>(67,45, 0.0)
+                   .leaf<RunAsInstructed>(67,45, prof->getValueAsNum("srewrate2"))
                 .end()
     //ライン検知するまでさらに緩やかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
