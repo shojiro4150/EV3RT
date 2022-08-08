@@ -1113,7 +1113,7 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(-55,60,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1000000) // 全身しながら大きく左に向けて旋回。黄色を目指す。
+                .leaf<IsTimeEarned>(800000) // 全身しながら大きく左に向けて旋回。黄色を目指す。
                 .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1129,7 +1129,7 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(45,45,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)   
-                .leaf<IsTimeEarned>(707500) // 黄色検知後、方向立て直す。
+                .leaf<IsTimeEarned>(690000) // 黄色検知後、方向立て直す。
                 .leaf<RunAsInstructed>(30,80,0.0) 
                 .leaf<IsColorDetected>(CL_RED)   
             .end()
