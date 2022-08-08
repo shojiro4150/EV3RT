@@ -1061,11 +1061,11 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE) 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(900000) // 後ろ向き走行。狙いは黒線。
+                .leaf<IsTimeEarned>(850000) // 後ろ向き走行。狙いは黒線。
                 .leaf<RunAsInstructed>(-30,-80,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1000000) // 後ろ向き走行。狙いは黒線。
+                .leaf<IsTimeEarned>(2000000) // 後ろ向き走行。狙いは黒線。
                 .leaf<RunAsInstructed>(-50,-50,0.0)    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1086,7 +1086,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(100000) // break after 10 seconds
+                .leaf<IsTimeEarned>(500000) // break after 10 seconds
                 .leaf<RunAsInstructed>(40,40,0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
