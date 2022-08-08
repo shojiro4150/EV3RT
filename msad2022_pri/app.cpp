@@ -753,13 +753,13 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
                    prof->getValueAsNum("D_CONST1"), 
-                   prof->getValueAsNum("srewrate2"), TS_OPPOSITE)//ライントレース1,右のライン検知
+                   prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     //交差地点後にしばらく直進
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(prof->getValueAsNum("TIME5"))
                    .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L3"),
-                   prof->getValueAsNum("POWER_R3"), 0.0)
+                   prof->getValueAsNum("POWER_R3"), prof->getValueAsNum("srewrate2"))
                 .end()
     //ゆるやかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
@@ -824,7 +824,7 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
                    prof->getValueAsNum("D_CONST1"), 
-                   prof->getValueAsNum("srewrate"), TS_OPPOSITE)//ライントレース6,右のライン検知
+                   prof->getValueAsNum("srewrate3"), TS_OPPOSITE)//ライントレース6,右のライン検知
                 .end()
     //スラロームに引き渡すまでライントレース
                 .composite<BrainTree::ParallelSequence>(1,2)
