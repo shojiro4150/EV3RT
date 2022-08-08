@@ -1095,7 +1095,7 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(40,40,0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1000000) // 本線ラインに戻ってくる
+                .leaf<IsTimeEarned>(1500000) // 本線ラインに戻ってくる
                 .leaf<RunAsInstructed>(75,40,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
