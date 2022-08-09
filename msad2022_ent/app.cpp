@@ -636,7 +636,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::MemSequence>()
     //GATE1を通過後ラインの交差地点地点直前まで
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
+                   .leaf<IsColorDetected>(CL_JETBLACK)//JETBLACKを検知
                    .leaf<IsTimeEarned>(18000000)//18秒
                    //.leaf<StopNow>()
                    .leaf<TraceLine>(41, 60, 0.76, 0.25, 0.07, 0.0, TS_OPPOSITE)//ライントレース1,右のライン検知
@@ -710,7 +710,7 @@ void main_task(intptr_t unused) {
     */ 
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(5500000)
-                   .leaf<TraceLine>(SPEED_HIGH, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
     /*
     after passing 3rd gate, go straight while
@@ -740,7 +740,7 @@ void main_task(intptr_t unused) {
     
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(3000000)
-                   .leaf<TraceLine>(SPEED_HIGH, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
 
                 .composite<BrainTree::ParallelSequence>(1,2)
@@ -762,7 +762,7 @@ void main_task(intptr_t unused) {
                       .leaf<IsColorDetected>(CL_BLACK)
                       .leaf<IsColorDetected>(CL_BLUE)
                    .end()
-                   .leaf<TraceLine>(SPEED_HIGH, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
                 
             .end()
@@ -855,7 +855,6 @@ void update_task(intptr_t unused) {
     plotter->plot();
 
     // for test
-    rgb_raw_t cur_rgb;
 
     colorSensor->getRawColor(cur_rgb);
     int32_t distance = plotter->getDistance();
