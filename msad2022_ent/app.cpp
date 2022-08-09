@@ -719,6 +719,25 @@ void update_task(intptr_t unused) {
     colorSensor->sense();
     plotter->plot();
 
+    // for test
+    rgb_raw_t cur_rgb;
+
+    colorSensor->getRawColor(cur_rgb);
+    int32_t distance = plotter->getDistance();
+    int16_t azimuth = plotter->getAzimuth();
+    int16_t degree = plotter->getDegree();
+    int32_t locX = plotter->getLocX();
+    int32_t locY = plotter->getLocY();
+    int32_t ang = plotter->getAngL();
+    int32_t angR = plotter->getAngR();
+
+    int32_t sonarDistance = sonarSensor->getDistance();
+
+    _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
+
+    _log("dist=%d azi=%d deg=%d locX=%d locY=%d ang=%d angR=%d",distance,azimuth,degree,locX,locY,ang,angR);
+    _log("sonar=%d",sonarDistance);
+    
 /*
     === STATE MACHINE DEFINITION STARTS HERE ===
     The robot behavior is defined using HFSM (Hierarchical Finite State Machine) with two hierarchies as a whole where:
