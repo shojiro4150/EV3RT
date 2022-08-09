@@ -710,7 +710,7 @@ void main_task(intptr_t unused) {
     */ 
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(5500000)
-                   .leaf<TraceLine>(SPEED_HIGH, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
     /*
     after passing 3rd gate, go straight while
@@ -740,7 +740,7 @@ void main_task(intptr_t unused) {
     
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(3000000)
-                   .leaf<TraceLine>(SPEED_HIGH, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
 
                 .composite<BrainTree::ParallelSequence>(1,2)
@@ -762,7 +762,7 @@ void main_task(intptr_t unused) {
                       .leaf<IsColorDetected>(CL_BLACK)
                       .leaf<IsColorDetected>(CL_BLUE)
                    .end()
-                   .leaf<TraceLine>(SPEED_HIGH, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                   .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
                 
             .end()
