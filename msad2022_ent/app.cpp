@@ -642,7 +642,7 @@ void main_task(intptr_t unused) {
                    .leaf<TraceLine>(41, 60, 0.76, 0.25, 0.07, 0.0, TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     /*
-    first turn right
+    first turn right　unk
     */ 
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(1190000)
