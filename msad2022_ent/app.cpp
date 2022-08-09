@@ -642,7 +642,7 @@ void main_task(intptr_t unused) {
                    .leaf<TraceLine>(41, 60, 0.76, 0.25, 0.07, 0.0, TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     /*
-    first turn right
+    first turn right　unk tnk
     */ 
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsTimeEarned>(1190000)
@@ -854,6 +854,9 @@ void update_task(intptr_t unused) {
     // for test
     plotter->plot();
 
+    // for test
+
+    colorSensor->getRawColor(cur_rgb);
     int32_t distance = plotter->getDistance();
     int16_t azimuth = plotter->getAzimuth();
     int16_t degree = plotter->getDegree();
@@ -868,7 +871,7 @@ void update_task(intptr_t unused) {
 
     _log("dist=%d azi=%d deg=%d locX=%d locY=%d ang=%d angR=%d",distance,azimuth,degree,locX,locY,ang,angR);
     _log("sonar=%d",sonarDistance);
-
+    
 /*
     === STATE MACHINE DEFINITION STARTS HERE ===
     The robot behavior is defined using HFSM (Hierarchical Finite State Machine) with two hierarchies as a whole where:
