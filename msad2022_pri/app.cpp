@@ -1527,7 +1527,7 @@ void update_task(intptr_t unused) {
 
     _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
 
-    _log("dist=%d azi=%d deg=%d locX=%d locY=%d ang=%d angR=d%",distance,azimuth,degree,locX,locY,ang,angR);
+    _log("dist=%d azi=%d deg=%d locX=%d locY=%d ang=%d angR=%d",distance,azimuth,degree,locX,locY,ang,angR);
     _log("sonar=%d",sonarDistance);
     
 /*
