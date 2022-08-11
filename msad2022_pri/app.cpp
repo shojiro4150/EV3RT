@@ -686,7 +686,7 @@ void main_task(intptr_t unused) {
     const int FIR_ORDER = 4; 
     const double hn[FIR_ORDER+1] = { 7.483914270309116e-03, 1.634745733863819e-01, 4.000000000000000e-01, 1.634745733863819e-01, 7.483914270309116e-03 };
     /* set filters to FilteredColorSensor */
-    Filter *lpf_r = new FIR_Transposed(hn, FIR_ORDER);
+    /*yamanaka Filter *lpf_r = new FIR_Transposed(hn, FIR_ORDER);
     Filter *lpf_g = new FIR_Transposed(hn, FIR_ORDER);
     Filter *lpf_b = new FIR_Transposed(hn, FIR_ORDER);
     colorSensor->setRawColorFilters(lpf_r, lpf_g, lpf_b);
@@ -700,7 +700,7 @@ void main_task(intptr_t unused) {
     rightMotor->setPWMFilter(srlfR);
     rightMotor->setPWM(0);
     armMotor->reset();
-
+    yamanaka */
 /*
     === BEHAVIOR TREE DEFINITION STARTS HERE ===
     A Behavior Tree serves as a blueprint for a LEGO object while a Node class serves as each Lego block used in the object.
