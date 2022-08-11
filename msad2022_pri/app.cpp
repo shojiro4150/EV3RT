@@ -852,7 +852,7 @@ void main_task(intptr_t unused) {
                       .leaf<IsColorDetected>(CL_BLACK)
                       .leaf<IsColorDetected>(CL_BLUE)
                    .end()
-                   .leaf<TraceLine>(prof->getValueAsNum("SPEED1"),
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED6"),
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
                    prof->getValueAsNum("I_CONST1"), 
                    prof->getValueAsNum("D_CONST1"), 0.0, TS_OPPOSITE)//ファイナルライントレース,右のライン検知
