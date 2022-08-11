@@ -816,7 +816,7 @@ void main_task(intptr_t unused) {
                 .end()
     //ライン検知するまで緩やかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME4"))
+                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME3a"))
                    .leaf<IsColorDetected>(CL_BLACK)
                    .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L4"),
                    prof->getValueAsNum("POWER_R4"), 0.0)
