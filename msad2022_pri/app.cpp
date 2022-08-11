@@ -767,9 +767,11 @@ void main_task(intptr_t unused) {
                 .end()
     //交差地点後にしばらく直進
                 .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1a"))
-                   .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L1a"),
-                   prof->getValueAsNum("POWER_R1a"), 0.0)
+                   .leaf<IsTimeEarned>(18000000))//18秒
+                   .leaf<StopNow>()
+                 //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1a"))
+                 //.leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L1a"),
+                 //prof->getValueAsNum("POWER_R1a"), 0.0)
                 .end()
     //ゆるやかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
