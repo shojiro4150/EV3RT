@@ -1532,9 +1532,9 @@ void main_task(intptr_t unused) {
     /* destroy profile object */
     delete prof;
     /* destroy EV3 objects */
-    delete lpf_b;
-    delete lpf_g;
-    delete lpf_r;
+    //delete lpf_b;
+    //delete lpf_g;
+    //delete lpf_r;
     delete plotter;
     delete armMotor;
     delete rightMotor;
