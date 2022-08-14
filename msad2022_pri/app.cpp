@@ -329,6 +329,7 @@ public:
                     _log("ODO=%05d, CL_BLUE detected.", plotter->getDistance());
                     return Status::Success;
                 }
+                break;
             case CL_BLUE_SL:
                 if (cur_rgb.b - cur_rgb.r > 20 && cur_rgb.g <= 100 && cur_rgb.b <= 120) {
                     garageColor = CL_BLUE_SL;
