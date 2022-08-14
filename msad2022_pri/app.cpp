@@ -1129,7 +1129,7 @@ void main_task(intptr_t unused) {
                                        prof->getValueAsNum("GR_RM3"),0.0)       
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(prof->getValueAsNum("GR_TM4") // 全身しながら大きく左に向けて旋回。黄色を目指す。
+                .leaf<IsTimeEarned>(prof->getValueAsNum("GR_TM4") )// 全身しながら大きく左に向けて旋回。黄色を目指す。
                 .leaf<TraceLine>(prof->getValueAsNum("G_LT2"),
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
@@ -1149,7 +1149,7 @@ void main_task(intptr_t unused) {
                                        prof->getValueAsNum("GR_RM6"),0.0)    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)   
-                .leaf<IsTimeEarned>(prof->getValueAsNum("GR_TM7") // 黄色検知後、方向立て直す。
+                .leaf<IsTimeEarned>(prof->getValueAsNum("GR_TM7")) // 黄色検知後、方向立て直す。
                 .leaf<RunAsInstructed>(prof->getValueAsNum("GR_LM7"),
                                        prof->getValueAsNum("GR_RM7"),0.0) 
                 .leaf<IsColorDetected>(CL_RED)   
@@ -1221,7 +1221,7 @@ void main_task(intptr_t unused) {
                                        prof->getValueAsNum("G_RM5"),0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>((prof->getValueAsNum("GO_TM1")) // break after 10 seconds
+                .leaf<IsTimeEarned>(prof->getValueAsNum("GO_TM1")) // break after 10 seconds
                 .leaf<RunAsInstructed>(prof->getValueAsNum("GO_LM1"),
                                        prof->getValueAsNum("GO_RM1"),0.0) //左に旋回。ライントレース準備。
             .end()
@@ -1368,7 +1368,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //前進。次の青検知を目指す。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsAngleLarger>(prof->getValueAsNum("GO_ANG3")
+                .leaf<IsAngleLarger>(prof->getValueAsNum("GO_ANG3"))
                 .leaf<RunAsInstructed>(prof->getValueAsNum("GO_LM6"),
                                        prof->getValueAsNum("GO_RM6"),0.0)    
             .end()
@@ -1451,7 +1451,7 @@ void main_task(intptr_t unused) {
                                        prof->getValueAsNum("G_RM5"),0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>((prof->getValueAsNum("GO_TM1")) // break after 10 seconds
+                .leaf<IsTimeEarned>(prof->getValueAsNum("GO_TM1")) // break after 10 seconds
                 .leaf<RunAsInstructed>(prof->getValueAsNum("GO_LM1"),
                                        prof->getValueAsNum("GO_RM1"),0.0) //左に旋回。ライントレース準備。
             .end()
