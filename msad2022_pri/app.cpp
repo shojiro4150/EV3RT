@@ -1139,21 +1139,25 @@ void main_task(intptr_t unused) {
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(500000) // 全身しながら大きく左に向けて旋回。黄色を目指す。
-                .leaf<RunAsInstructed>(-50,50,0.0)      
+                .leaf<IsTimeEarned>(prof->getValueAsNum("GR_TM5")) // 全身しながら大きく左に向けて旋回。黄色を目指す。
+                .leaf<RunAsInstructed>(prof->getValueAsNum("GR_LM5"),
+                                       prof->getValueAsNum("GR_RM5"),0.0)       
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsColorDetected>(CL_YELLOW)    
-                .leaf<RunAsInstructed>(45,45,0.0)      
+                .leaf<IsColorDetected>(CL_YELLOW)    // 黄色検知後、方向立て直す。
+                .leaf<RunAsInstructed>(prof->getValueAsNum("GR_LM6"),
+                                       prof->getValueAsNum("GR_RM6"),0.0)    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)   
-                .leaf<IsTimeEarned>(450000) // 黄色検知後、方向立て直す。
-                .leaf<RunAsInstructed>(30,80,0.0) 
+                .leaf<IsTimeEarned>(prof->getValueAsNum("GR_TM7")) 
+                .leaf<RunAsInstructed>(prof->getValueAsNum("GR_LM7"),
+                                       prof->getValueAsNum("GR_RM7"),0.0) 
                 .leaf<IsColorDetected>(CL_RED)   
             .end()
             .composite<BrainTree::ParallelSequence>(1,3) 
                 .leaf<IsColorDetected>(CL_RED)  //赤検知までまっすぐ進む。
-                .leaf<RunAsInstructed>(40,40,0.0)      
+                .leaf<RunAsInstructed>(prof->getValueAsNum("GR_LM8"),
+                                       prof->getValueAsNum("GR_RM8"),0.0)      
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
