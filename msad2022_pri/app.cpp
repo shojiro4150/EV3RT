@@ -1130,12 +1130,12 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(prof->getValueAsNum("GR_TM4") // 全身しながら大きく左に向けて旋回。黄色を目指す。
-                .leaf<TraceLine>(prof->getValueAsNum("GR_LT2"),
+                .leaf<TraceLine>(prof->getValueAsNum("G_LT2"),
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_WHITE)  
-                .leaf<TraceLine>(prof->getValueAsNum("GR_LT2"),
+                .leaf<TraceLine>(prof->getValueAsNum("G_LT2"),
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)   
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1233,7 +1233,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
-                .leaf<TraceLine>(prof->getValueAsNum("GO_LT1"), 
+                .leaf<TraceLine>(prof->getValueAsNum("G_LT1"), 
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
                 .leaf<IsColorDetected>(CL_BLUE2)  //純粋な青検知までライントレース
             .end()
@@ -1260,7 +1260,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_WHITE)  
-                .leaf<TraceLine>(prof->getValueAsNum("GO_LT2"), 
+                .leaf<TraceLine>(prof->getValueAsNum("G_LT2"), 
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1347,7 +1347,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(5000000)
-                .leaf<TraceLine>(prof->getValueAsNum("GO_LT1"), 
+                .leaf<TraceLine>(prof->getValueAsNum("G_LT1"), 
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
                 .leaf<IsColorDetected>(CL_BLUE2)  //純粋な青検知までライントレース
             .end()
@@ -1374,7 +1374,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_WHITE)  
-                .leaf<TraceLine>(prof->getValueAsNum("GO_LT2"), 
+                .leaf<TraceLine>(prof->getValueAsNum("G_LT2"), 
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
