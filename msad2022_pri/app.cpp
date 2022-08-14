@@ -748,7 +748,8 @@ void main_task(intptr_t unused) {
     //GATE1を通過後ラインの交差地点地点直前まで
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
-                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))//18秒
+                   .leaf<IsDistanceEarned>(prof->getValueAsNum("DIST1"))
+                   //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))
                    //.leaf<StopNow>()
                    .leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
                    prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
