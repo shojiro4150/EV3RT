@@ -1484,14 +1484,14 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //前進。次の青検知を目指す。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(prof->getValueAsNum("GO_TM5")) //青検知後、大きく右旋回。向きを整える。
+                .leaf<IsTimeEarned>(prof->getValueAsNum("GO_TM6")) //青検知後、大きく右旋回。向きを整える。
                 .leaf<RunAsInstructed>(prof->getValueAsNum("GO_LM6"),
                                        prof->getValueAsNum("GO_RM6"),0.0)    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_WHITE)  
                 .leaf<TraceLine>(prof->getValueAsNum("G_LT2"), 
-                                 GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
+                                GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(prof->getValueAsNum("GO_TM7"))
