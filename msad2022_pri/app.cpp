@@ -700,7 +700,7 @@ void main_task(intptr_t unused) {
     rightMotor->setPWMFilter(srlfR);
     rightMotor->setPWM(0);
     armMotor->reset();
-    
+
 /*
     === BEHAVIOR TREE DEFINITION STARTS HERE ===
     A Behavior Tree serves as a blueprint for a LEGO object while a Node class serves as each Lego block used in the object.
@@ -767,11 +767,11 @@ void main_task(intptr_t unused) {
                 .end()
     //交差地点後にしばらく直進
                 .composite<BrainTree::ParallelSequence>(2,2)
-                   .leaf<IsTimeEarned>(18000000)//18秒
-                   .leaf<StopNow>()
-                 //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1a"))
-                 //.leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L1a"),
-                 //prof->getValueAsNum("POWER_R1a"), 0.0)
+                 //.leaf<IsTimeEarned>(18000000)//18秒
+                 //.leaf<StopNow>()
+                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1a"))
+                   .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L1a"),
+                   prof->getValueAsNum("POWER_R1a"), 0.0)
                 .end()
     //ゆるやかに右カーブ
                 .composite<BrainTree::ParallelSequence>(1,2)
