@@ -2,6 +2,9 @@
     Video.cpp
     Copyright © 2022 MSAD Mode2P. All rights reserved.
 */
+
+/*
+
 #include "Video.hpp"
 #include "appusr.hpp"
 
@@ -34,7 +37,13 @@ Video::Video() {
   XSetForeground(disp, gc, white);
   XSetFont(disp, gc, font);
   gbuf = malloc(sizeof(unsigned long) * X11_FRAME_WIDTH * 2*X11_FRAME_HEIGHT);
+
+*/
+
   /* initialize gbuf with zero */
+
+/*
+
   for (int j = 0; j < 2*X11_FRAME_HEIGHT; j++) {
     for (int i = 0; i < X11_FRAME_WIDTH; i++) {
       buf = (unsigned long*)gbuf + i + j*X11_FRAME_WIDTH;
@@ -101,3 +110,5 @@ void Video::show() {
   XDrawString(disp, win, gc, 10, X11_FRAME_HEIGHT+70, strbuf[2], strlen(strbuf[2]));
   XFlush(disp);
 }
+
+*/

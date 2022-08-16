@@ -59,11 +59,11 @@ extern Plotter*     plotter;
    this is also where -std=gnu++11 option is necessary */
 #ifdef LOG_ON_CONSOL
 #define _log(fmt, ...) \
-    syslog(LOG_NOTICE, "%08u, %s: " fmt, \
+    syslog(LOG_NOTICE, "%10u, %s: " fmt, \
     ev3clock->now(), __PRETTY_FUNCTION__, ##__VA_ARGS__)
 #else
 #define _log(fmt, ...) \
-    printf("%08u, %s: " fmt "\n", \
+    printf("%10u, %s: " fmt "\n", \
     ev3clock->now(), __PRETTY_FUNCTION__, ##__VA_ARGS__)
     // temp fix 2022/6/20 W.Taniguchi, as Bluetooth not implemented yet
     /* fprintf(bt, "%08u, %s: " fmt "\n", \ */
@@ -102,14 +102,17 @@ static int _COURSE = 1;
 #define D_CONST                 0.08D
 #endif
 
+//define where to jump from caliration:1~10
 #ifndef JUMP_CALIBRATION
 #define JUMP_CALIBRATION        0
 #endif
 
+//define which pattern to jump from slalom check to slalom second
 #ifndef JUMP_SLALOM
 #define JUMP_SLALOM             false
 #endif
 
+//define where to jump from slalom second to garage:1~7
 #ifndef JUMP_BLOCK
 #define JUMP_BLOCK              0
 #endif

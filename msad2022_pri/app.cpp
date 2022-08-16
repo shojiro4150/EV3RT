@@ -1,10 +1,11 @@
-/*
+/*jump_sla
     app.cpp
     Copyright © 2022 MSAD Mode2P. All rights reserved.
 */
 #include "BrainTree.h"
 #include "Profile.hpp"
-#include "Video.hpp"
+//#include "Video.hpp"
+
 /*
     BrainTree.h must present before ev3api.h on RasPike environment.
     Note that ev3api.h is included by app.h.
@@ -34,7 +35,7 @@ SRLF*           srlfR;
 FilteredMotor*  rightMotor;
 Motor*          armMotor;
 Plotter*        plotter;
-Video*          video;
+//Video*          video;
 
 BrainTree::BehaviorTree* tr_calibration = nullptr;
 BrainTree::BehaviorTree* tr_run         = nullptr;
@@ -49,6 +50,8 @@ BrainTree::BehaviorTree* tr_block_y     = nullptr;
 BrainTree::BehaviorTree* tr_block_d     = nullptr;
 BrainTree::BehaviorTree* tr_block_d2    = nullptr;
 State state = ST_INITIAL;
+
+Color gGarageColor = CL_BLUE_SL;    //define default garage card color as blue
 
 /*
     === NODE CLASS DEFINITION STARTS HERE ===
@@ -150,7 +153,7 @@ protected:
 class DetectSlalomPattern : public BrainTree::Node {
 public:
     static bool isSlalomPatternA;
-    static int32_t earnedDistance;
+    static int32_t measuredDistance;
     DetectSlalomPattern() {}
     Status update() override {
         distance = 10 * (sonarSensor->getDistance());
@@ -158,12 +161,12 @@ public:
         if (0 < distance && distance <= 250) {
             //*ptrSlalomPattern = 1;
             isSlalomPatternA = true;
-            earnedDistance = distance;
+            measuredDistance = distance;
             return Status::Success;
         } else if (300 < distance && distance < 400) {
             //*ptrSlalomPattern = 2;
             isSlalomPatternA = false;
-            earnedDistance = distance;
+            measuredDistance = distance;
             return Status::Success;
         } else {
             return Status::Running;
@@ -173,7 +176,7 @@ protected:
     int32_t distance;
 };
 bool DetectSlalomPattern::isSlalomPatternA = true;
-int32_t DetectSlalomPattern::earnedDistance = 0;
+int32_t DetectSlalomPattern::measuredDistance = 0;
 
 /*
     usage:
@@ -295,7 +298,6 @@ protected:
 */
 class IsColorDetected : public BrainTree::Node {
 public:
-    static Color garageColor;
     IsColorDetected(Color c) : color(c) {
         updated = false;
     }
@@ -332,9 +334,10 @@ public:
                     return Status::Success;
                 }
                 break;
+            //for garage card
             case CL_BLUE_SL:
                 if (cur_rgb.b - cur_rgb.r > 20 && cur_rgb.g <= 100 && cur_rgb.b <= 120) {
-                    garageColor = CL_BLUE_SL;
+                    gGarageColor = CL_BLUE_SL;
                     _log("ODO=%05d, CL_BLUE_SL detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -352,9 +355,10 @@ public:
                     return Status::Success;
                 }
                 break;
+            //for garage card
             case CL_RED_SL:
                 if (cur_rgb.r - cur_rgb.b >= 25 && cur_rgb.r > 85 && cur_rgb.g < 60) {
-                    garageColor = CL_RED_SL;
+                    gGarageColor = CL_RED_SL;
                     _log("ODO=%05d, CL_RED_SL detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -365,9 +369,10 @@ public:
                     return Status::Success;
                 }
                 break;
+            //for garage card
             case CL_YELLOW_SL:
                 if (cur_rgb.r >= 110 &&  cur_rgb.g >= 90 && cur_rgb.b >= 50 && cur_rgb.b <= 120 ) {
-                    garageColor = CL_YELLOW_SL;
+                    gGarageColor = CL_YELLOW_SL;
                     _log("ODO=%05d, CL_YELLOW_SL detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -377,9 +382,11 @@ public:
                     _log("ODO=%05d, CL_GREEN detected.", plotter->getDistance());
                     return Status::Success;
                 }
+                break;
+            //for garage card
             case CL_GREEN_SL:
                 if (cur_rgb.b - cur_rgb.r < 30 && cur_rgb.g >= 30 && cur_rgb.b <= 80) {
-                    garageColor = CL_GREEN_SL;
+                    gGarageColor = CL_GREEN_SL;
                     _log("ODO=%05d, CL_GREEN_SL detected.", plotter->getDistance());
                     return Status::Success;
                 }   
@@ -405,7 +412,6 @@ protected:
     Color color;
     bool updated;
 };
-Color IsColorDetected::garageColor = CL_BLUE_SL;    // define default color as blue
 
 /*
     usage:
@@ -666,7 +672,7 @@ void main_task(intptr_t unused) {
     //assert(bt != NULL);
     /* create and initialize EV3 objects */
     ev3clock    = new Clock();
-    video       = new Video();
+//    video       = new Video();
     touchSensor = new TouchSensor(PORT_1);
     // temp fix 2022/6/20 W.Taniguchi, new SonarSensor() blocks apparently
     sonarSensor = new SonarSensor(PORT_3);
@@ -754,9 +760,6 @@ void main_task(intptr_t unused) {
       tr_block_b     = nullptr;
       tr_block_y     = nullptr;
       tr_block_d     = nullptr;
-      tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder()
-	    .leaf<StopNow>()
-	  .build();
 
     } else { /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
       _COURSE = 1;
@@ -886,170 +889,164 @@ void main_task(intptr_t unused) {
     .build();
 
     tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder()
-        .composite<BrainTree::ParallelSequence>(1,2)
-            .leaf<IsBackOn>()
+        .composite<BrainTree::MemSequence>()
+            // ライントレースから引継ぎして、直前の青線まで走る
+            .composite<BrainTree::ParallelSequence>(1,2)
+            .leaf<IsTimeEarned>(1000000)
+            .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
             .composite<BrainTree::MemSequence>()
-                // ライントレースから引継ぎして、直前の青線まで走る
-                .composite<BrainTree::ParallelSequence>(1,2)
-                   .leaf<IsTimeEarned>(1000000)
-                   .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                   .composite<BrainTree::MemSequence>()
-                      .leaf<IsColorDetected>(CL_BLACK)
-                      .leaf<IsColorDetected>(CL_BLUE)
-                   .end()
-                   .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                .end()
-                // 台にのる　勢いが必要
-                .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsColorDetected>(CL_BLACK)
+                .leaf<IsColorDetected>(CL_BLUE)
+            .end()
+            .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .end()
+            // 台にのる　勢いが必要
+            .composite<BrainTree::ParallelSequence>(1,2)
 //                    .leaf<IsDistanceEarned>(150)
-                    .leaf<IsTimeEarned>(150000)
-                    .leaf<RunAsInstructed>(70, 70, 0.0)
-                .end()
+                .leaf<IsTimeEarned>(150000)
+                .leaf<RunAsInstructed>(70, 70, 0.0)
+            .end()
 /*
-                // 勢いを殺す
-                .composite<BrainTree::MemSequence>()
-                    .leaf<StopNow>()
-                    .leaf<IsTimeEarned>(200000) //sonar 0.2 sec
-                .end()
+            // 勢いを殺す
+            .composite<BrainTree::MemSequence>()
+                .leaf<StopNow>()
+                .leaf<IsTimeEarned>(200000) //sonar 0.2 sec
+            .end()
 */           
 /*
-                .composite<BrainTree::ParallelSequence>(1,2)
-                   .composite<BrainTree::MemSequence>()
-                      .leaf<ClimbBoard>()
-                   .end()
-                   .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+            .composite<BrainTree::MemSequence>()
+                .leaf<ClimbBoard>()
+            .end()
+            .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .end()
 */
-                .composite<BrainTree::ParallelSequence>(1,2)//初期位置調整のために、台上で短距離ライントレース
-                    .leaf<IsDistanceEarned>(30)
-                    .leaf<TraceLine>(30, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                    //.leaf<RunAsInstructed>(40, 20, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)//第一スラローム開始
-                    .leaf<IsDistanceEarned>(100)
-                    .leaf<RunAsInstructed>(20, 50, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(30)
-                    .leaf<RunAsInstructed>(30, 30, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)//第二スラローム開始
-                    .leaf<IsDistanceEarned>(120)
-                    .leaf<RunAsInstructed>(60, 15, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(30)
-                    .leaf<RunAsInstructed>(15, 40, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(10)
-                    .leaf<RunAsInstructed>(30, 30, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(70)
-                    .leaf<RunAsInstructed>(40, 15, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)//黒検知したらライントレース
-                    .leaf<IsColorDetected>(CL_BLACK)
-                    .leaf<RunAsInstructed>(30, 20, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(160)
-                    .leaf<TraceLine>(30, 47, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)//ライントレースおもてなし
-                    .leaf<IsDistanceEarned>(20)
-                    .leaf<RunAsInstructed>(15, 50, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(20)
-                    .leaf<RunAsInstructed>(50, 15, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)//第三スラローム開始 ライントレース
-                    .leaf<IsDistanceEarned>(160)
-                    .leaf<TraceLine>(30, 47, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)//第三スラローム開始 ライントレース
-                    //.leaf<IsDistanceEarned>(50)
-                    .leaf<IsSonarOn>(500)//超音波センサー＆ライトレースによるチェックポイント
-                    .leaf<TraceLine>(30, 47, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)//ガレージカードスラローム開始
-                    .leaf<IsDistanceEarned>(90)
-                    .leaf<RunAsInstructed>(50, 15, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(80)
-                    .leaf<RunAsInstructed>(30, 30, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(60)
-                    .leaf<RunAsInstructed>(15, 50, 0.0)
-                .end()
-                // 色検知
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    //.leaf<IsDistanceEarned>(50)
-                    .leaf<IsColorDetected>(CL_BLUE_SL)
-                    .leaf<IsColorDetected>(CL_RED_SL)
-                    .leaf<IsColorDetected>(CL_YELLOW_SL)
-                    .leaf<IsColorDetected>(CL_GREEN_SL)
-                    .leaf<RunAsInstructed>(30, 30, 0.0)
-                .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//初期位置調整のために、台上で短距離ライントレース
+                .leaf<IsDistanceEarned>(30)
+                .leaf<TraceLine>(30, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+                //.leaf<RunAsInstructed>(40, 20, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//第一スラローム開始
+                .leaf<IsDistanceEarned>(100)
+                .leaf<RunAsInstructed>(20, 50, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(30)
+                .leaf<RunAsInstructed>(30, 30, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//第二スラローム開始
+                .leaf<IsDistanceEarned>(120)
+                .leaf<RunAsInstructed>(60, 15, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(30)
+                .leaf<RunAsInstructed>(15, 40, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(10)
+                .leaf<RunAsInstructed>(30, 30, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(70)
+                .leaf<RunAsInstructed>(40, 15, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//黒検知したらライントレース
+                .leaf<IsColorDetected>(CL_BLACK)
+                .leaf<RunAsInstructed>(30, 20, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(160)
+                .leaf<TraceLine>(30, 47, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//ライントレースおもてなし
+                .leaf<IsDistanceEarned>(20)
+                .leaf<RunAsInstructed>(15, 50, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(20)
+                .leaf<RunAsInstructed>(50, 15, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//第三スラローム開始 ライントレース
+                .leaf<IsDistanceEarned>(160)
+                .leaf<TraceLine>(30, 47, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//第三スラローム開始 ライントレース
+                //.leaf<IsDistanceEarned>(50)
+                .leaf<IsSonarOn>(500)//超音波センサー＆ライトレースによるチェックポイント
+                .leaf<TraceLine>(30, 47, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//ガレージカードスラローム開始
+                .leaf<IsDistanceEarned>(90)
+                .leaf<RunAsInstructed>(50, 15, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(80)
+                .leaf<RunAsInstructed>(30, 30, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(60)
+                .leaf<RunAsInstructed>(15, 50, 0.0)
+            .end()
+            // 色検知
+            .composite<BrainTree::ParallelSequence>(1,2)
+                //.leaf<IsDistanceEarned>(50)
+                .leaf<IsColorDetected>(CL_BLUE_SL)
+                .leaf<IsColorDetected>(CL_RED_SL)
+                .leaf<IsColorDetected>(CL_YELLOW_SL)
+                .leaf<IsColorDetected>(CL_GREEN_SL)
+                .leaf<RunAsInstructed>(30, 30, 0.0)
             .end()
         .end()
     .build();
     
     //台上転回後、センサーでコースパターン判定
     tr_slalom_check = (BrainTree::BehaviorTree*) BrainTree::Builder()
-        .composite<BrainTree::ParallelSequence>(1,2)
-            .leaf<IsBackOn>()
+        .composite<BrainTree::MemSequence>()
+            // 色検知 for test
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsColorDetected>(CL_BLUE_SL)
+                .leaf<IsColorDetected>(CL_RED_SL)
+                .leaf<IsColorDetected>(CL_YELLOW_SL)
+                .leaf<IsColorDetected>(CL_GREEN_SL)
+            .end()
+            //move back
+            .composite<BrainTree::ParallelSequence>(1,2)
+ //               .leaf<IsTimeEarned>(600000) //param SJ:700000,IS:550000,600000
+                .leaf<IsDistanceEarned>(60)
+                .leaf<RunAsInstructed>(-40, -40, 3.0)
+            .end()
+            //rotate left with left wheel
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(300000) //param SJ:500000,IS:500000,200000,350000,300000
+                .leaf<RunAsInstructed>(-40, 0, 0.0) 
+            .end()
+            //move foward
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(450000) //param SJ:450000,IS:350000,450000
+                .leaf<RunAsInstructed>(50, 50, 0.0)
+            .end()
+            //turn left with right wheel
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(760000) //param SJ：1350000,IS:820000,760000
+                .leaf<RunAsInstructed>(0, 50, 0.0)
+            .end()
+            //detect the distance between the robot and plastic bottle using ultrasonic sensor
+            //determine the arrangement pattern of plastic bottles from the distance
+            //rotate right until sensor detects the distance or 2 second pass
             .composite<BrainTree::MemSequence>()
-                // 色検知 for test
+                .leaf<StopNow>()
                 .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsColorDetected>(CL_BLUE_SL)
-                    .leaf<IsColorDetected>(CL_RED_SL)
-                    .leaf<IsColorDetected>(CL_YELLOW_SL)
-                    .leaf<IsColorDetected>(CL_GREEN_SL)
-                    .leaf<IsTimeEarned>(100000)
+                    .leaf<IsTimeEarned>(500000) //sonar 0.5 sec
+                    .leaf<DetectSlalomPattern>()
+                    .leaf<RunAsInstructed>(0, 35, 0.0)
                 .end()
-                //move back
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsTimeEarned>(600000) //param SJ:700000,IS:550000,600000
-                    .leaf<RunAsInstructed>(-40, -40, 0.0)
-                .end()
-                //rotate left with left wheel
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsTimeEarned>(300000) //param SJ:500000,IS:500000,200000,350000,300000
-                    .leaf<RunAsInstructed>(-40, 0, 0.0) 
-                .end()
-                //move foward
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsTimeEarned>(450000) //param SJ:450000,IS:350000,450000
-                    .leaf<RunAsInstructed>(50, 50, 0.0)
-                .end()
-                //turn left with right wheel
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsTimeEarned>(760000) //param SJ：1350000,IS:820000,760000
-                    .leaf<RunAsInstructed>(0, 50, 0.0)
-                .end()
-                //detect the distance between the robot and plastic bottle using ultrasonic sensor
-                //determine the arrangement pattern of plastic bottles from the distance
-                //rotate right until sensor detects the distance or 2 second pass
-                .composite<BrainTree::MemSequence>()
-                    .leaf<StopNow>()
-                    .composite<BrainTree::ParallelSequence>(1,2)
-                        .leaf<IsTimeEarned>(500000) //sonar 0.5 sec
-                        .leaf<DetectSlalomPattern>()
-                        .leaf<RunAsInstructed>(0, 35, 0.0)
-                    .end()
-                .end()
-                //able to see detected
-                .composite<BrainTree::MemSequence>()
-                    .leaf<StopNow>()
-                    .leaf<IsTimeEarned>(500000) //wait 0.5 sec
-                .end()
+            .end()
+            //able to see detected
+            .composite<BrainTree::MemSequence>()
+                .leaf<StopNow>()
+                .leaf<IsTimeEarned>(500000) //wait 0.5 sec
             .end()
         .end()
     .build();
@@ -1347,6 +1344,7 @@ void main_task(intptr_t unused) {
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .leaf<SetArmPosition>(10, 40)
+        
         .end()
         .build();
 
@@ -1598,7 +1596,7 @@ void main_task(intptr_t unused) {
 */
 
     /* register cyclic handler to EV3RT */
-    sta_cyc(CYC_VIDEO_TSK);
+//    sta_cyc(CYC_VIDEO_TSK);
     sta_cyc(CYC_UPD_TSK);
 
     /* indicate initialization completion by LED color */
@@ -1616,7 +1614,7 @@ void main_task(intptr_t unused) {
 
     /* deregister cyclic handler from EV3RT */
     stp_cyc(CYC_UPD_TSK);
-    stp_cyc(CYC_VIDEO_TSK);
+//    stp_cyc(CYC_VIDEO_TSK);
     _log("wait for update task to cease, going to sleep 3 secs");
     ev3clock->sleep(3000000);
     _log("wait finished");
@@ -1647,7 +1645,7 @@ void main_task(intptr_t unused) {
     delete colorSensor;
     delete sonarSensor;
     delete touchSensor;
-    delete video;
+//    delete video;
     delete ev3clock;
     _log("being terminated...");
     // temp fix 2022/6/20 W.Taniguchi, as Bluetooth not implemented yet
@@ -1659,12 +1657,14 @@ void main_task(intptr_t unused) {
 }
 
 /* periodic task to handle video */
+/*
 void video_task(intptr_t unused) {
     ER ercd;
     video->capture();
     video->writeFrame(video->readFrame());    
     video->show();
 }
+*/
     
 /* periodic task to update the behavior tree */
 void update_task(intptr_t unused) {
@@ -1688,10 +1688,8 @@ void update_task(intptr_t unused) {
 
     int32_t sonarDistance = sonarSensor->getDistance();
 
-    _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
-
-    _log("dist=%d azi=%d deg=%d locX=%d locY=%d ang=%d angR=%d",distance,azimuth,degree,locX,locY,ang,angR);
-    _log("sonar=%d",sonarDistance);
+    _log("red=%03d,green=%03d,blue=%03d,dist=%06d,azi=%03d,deg=%03d,locX=%06d,locY=%06d,ang=%03d,angR=%03d,sonar=%04d",
+            cur_rgb.r,cur_rgb.g,cur_rgb.b,distance,azimuth,degree,locX,locY,ang,angR,sonarDistance);
     
 /*
     === STATE MACHINE DEFINITION STARTS HERE ===
@@ -1744,7 +1742,7 @@ void update_task(intptr_t unused) {
                         break;
                     case 10:
                         state = ST_BLOCK_D2;
-                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D2");
                         break;
                     default:
                         state = ST_RUN;
@@ -1804,18 +1802,18 @@ void update_task(intptr_t unused) {
                     // for test
                     if (JUMP_SLALOM == true) {
                         _log("test only ST_SLALOM_CHECK.");
-                        if (DetectSlalomPattern::earnedDistance == 0) {
+                        if (DetectSlalomPattern::measuredDistance == 0) {
                             _log("Failed to check slalom pattern.");
                         }
                             state = ST_ENDING;
-                            _log("Distance %d is detected by sonar and chose pattern A.", DetectSlalomPattern::earnedDistance);
+                            _log("Distance %d is detected by sonar and chose pattern A.", DetectSlalomPattern::measuredDistance);
                             _log("State changed: ST_SLALOM_CHECK to ST_ENDING");
                     } else {
-                        if (DetectSlalomPattern::earnedDistance == 0) {
+                        if (DetectSlalomPattern::measuredDistance == 0) {
                             _log("Failed to check slalom pattern.");
                         }
                         state = ST_SLALOM_SECOND_A;
-                        _log("Distance %d is detected by sonar and chose pattern A.", DetectSlalomPattern::earnedDistance);
+                        _log("Distance %d is detected by sonar and chose pattern A.", DetectSlalomPattern::measuredDistance);
                         _log("State changed: ST_SLALOM_CHECK to ST_SLALOM_SECOND_A");
                     }
                 } else {
@@ -1823,11 +1821,11 @@ void update_task(intptr_t unused) {
                     if (JUMP_SLALOM == true) {
                         _log("test only ST_SLALOM_CHECK.");
                         state = ST_ENDING;
-                        _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::earnedDistance);
+                        _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::measuredDistance);
                         _log("State changed: ST_SLALOM_CHECK to ST_ENDING");
                     } else {
                         state = ST_SLALOM_SECOND_B;
-                        _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::earnedDistance);
+                        _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::measuredDistance);
                         _log("State changed: ST_SLALOM_CHECK to ST_SLALOM_SECOND_B");
                     }
                 }
@@ -1864,12 +1862,35 @@ void update_task(intptr_t unused) {
                         _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_Y");
                         break;
                     case 5:
+                        state = ST_BLOCK_D;
+                        _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_D");
+                        break;
+                    case 6:
+                        state = ST_BLOCK_D2;
+                        _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_D2");
+                        break;
+                    case 7:
                         state = ST_ENDING;
                         _log("State changed: ST_SLALOM_SECOND_A to ST_ENDING");
                         break;
+                    //go to appropiate garage logic based on color
                     default:
-                        state = ST_BLOCK_D;
-                        _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_D");
+                        if (gGarageColor == CL_RED_SL) {
+                            state = ST_BLOCK_R;
+                            _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_R");
+                        }
+                        if (gGarageColor == CL_GREEN_SL) {
+                            state = ST_BLOCK_G;
+                            _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_G");
+                        }
+                        if (gGarageColor == CL_BLUE_SL) {
+                            state = ST_BLOCK_B;
+                            _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_B");
+                        }
+                        if (gGarageColor == CL_YELLOW_SL) {
+                            state = ST_BLOCK_Y;
+                            _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_Y");
+                        }
                         break;
                 }
                 break;
@@ -1905,12 +1926,35 @@ void update_task(intptr_t unused) {
                         _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_Y");
                         break;
                     case 5:
+                        state = ST_BLOCK_D;
+                        _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_D");
+                        break;
+                    case 6:
+                        state = ST_BLOCK_D2;
+                        _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_D2");
+                        break;
+                    case 7:
                         state = ST_ENDING;
                         _log("State changed: ST_SLALOM_SECOND_B to ST_ENDING");
                         break;
+                    //go to appropiate garage logic based on color
                     default:
-                        state = ST_BLOCK_D;
-                        _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_D");
+                        if (gGarageColor == CL_RED_SL) {
+                            state = ST_BLOCK_R;
+                            _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_R");
+                        }
+                        if (gGarageColor == CL_GREEN_SL) {
+                            state = ST_BLOCK_G;
+                            _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_G");
+                        }
+                        if (gGarageColor == CL_BLUE_SL) {
+                            state = ST_BLOCK_B;
+                            _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_B");
+                        }
+                        if (gGarageColor == CL_YELLOW_SL) {
+                            state = ST_BLOCK_Y;
+                            _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_Y");
+                        }
                         break;
                 }
                 break;
@@ -1999,7 +2043,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_BLOCK_D to ST_ENDING");
+                _log("State changed: ST_BLOCK_D2 to ST_ENDING");
                 break;
             default:
                 break;

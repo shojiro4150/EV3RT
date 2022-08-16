@@ -2,6 +2,8 @@
     Video.hpp
     Copyright © 2022 MSAD Mode2P. All rights reserved.
 */
+
+/*
 #ifndef Video_hpp
 #define Video_hpp
 
@@ -52,4 +54,6 @@ public:
   ~Video();
 };
 
-#endif /* Video_hpp */
+*/
+
+//#endif /* Video_hpp */
