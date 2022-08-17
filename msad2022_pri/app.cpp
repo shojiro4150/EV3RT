@@ -746,7 +746,7 @@ void main_task(intptr_t unused) {
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
     //GATE1を通過後ラインの交差地点地点直前まで
-                .composite<BrainTree::ParallelSequence>(2,2)
+                .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
                    .leaf<IsDistanceEarned>(prof->getValueAsNum("DIST1"))
                    //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))
@@ -768,7 +768,7 @@ void main_task(intptr_t unused) {
                    prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     //交差地点後にしばらく直進
-                .composite<BrainTree::ParallelSequence>(2,2)
+                .composite<BrainTree::ParallelSequence>(1,2)
                  //.leaf<IsTimeEarned>(18000000)//18秒
                  //.leaf<StopNow>()
                    .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1a"))
