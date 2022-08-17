@@ -1538,7 +1538,7 @@ void main_task(intptr_t unused) {
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .leaf<SetArmPosition>(10, 40)
         .end()
-        .build();
+    .build();
 
     // テストでの値取得用
     tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder()
