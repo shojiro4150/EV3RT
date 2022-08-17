@@ -1532,7 +1532,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<RunAsInstructed>(prof->getValueAsNum("GO_LM7"),
                                        prof->getValueAsNum("GO_RM7"),0.0) 
-                .leaf<IsColorDetected>(CL_GREEN)  
+                .leaf<IsColorDetected>(CL_YELLOW)  
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
