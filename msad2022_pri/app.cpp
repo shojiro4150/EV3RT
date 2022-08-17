@@ -1423,7 +1423,9 @@ void main_task(intptr_t unused) {
             .leaf<SetArmPosition>(10, 40)
         .end()
     .build();
-
+    
+    tr_block_y     = nullptr;
+/*
     tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1539,7 +1541,7 @@ void main_task(intptr_t unused) {
             .leaf<SetArmPosition>(10, 40)
         .end()
     .build();
-
+*/
     // テストでの値取得用
     tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
