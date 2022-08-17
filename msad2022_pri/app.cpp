@@ -1424,8 +1424,6 @@ void main_task(intptr_t unused) {
         .end()
     .build();
     
-    tr_block_y     = nullptr;
-/*
     tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1541,7 +1539,7 @@ void main_task(intptr_t unused) {
             .leaf<SetArmPosition>(10, 40)
         .end()
     .build();
-*/
+
     // テストでの値取得用
     tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
@@ -1603,6 +1601,7 @@ void main_task(intptr_t unused) {
     delete tr_block_b;
     delete tr_block_y;
     delete tr_block_d;
+    delete tr_block_d2;
     delete tr_run;
     delete tr_slalom_first;
     delete tr_slalom_check;
