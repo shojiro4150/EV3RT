@@ -766,8 +766,6 @@ void main_task(intptr_t unused) {
     } else { /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
       _COURSE = 1;
 
-      _log("before linetrace tree");
-
       tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::ParallelSequence>(1,2)
             .leaf<IsBackOn>()
@@ -778,21 +776,21 @@ void main_task(intptr_t unused) {
                    .leaf<IsDistanceEarned>(prof->getValueAsNum("DIST1"))
                    //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))
                    .leaf<StopNow>()
-                   //.leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
-                   //prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
-                   //prof->getValueAsNum("I_CONST1"), 
-                   //prof->getValueAsNum("D_CONST1"), 
-                   //prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
+                        prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                        prof->getValueAsNum("I_CONST1"), 
+                        prof->getValueAsNum("D_CONST1"), 
+                        prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     //ラインの交差地点直前から検知するまで減速
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
                    .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))//18秒
                    .leaf<TraceLine>(prof->getValueAsNum("SPEED1a"), 
-                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
-                   prof->getValueAsNum("I_CONST1"), 
-                   prof->getValueAsNum("D_CONST1"), 
-                   prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
+                        prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                        prof->getValueAsNum("I_CONST1"), 
+                        prof->getValueAsNum("D_CONST1"), 
+                        prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     //交差地点後にしばらく直進
                 .composite<BrainTree::ParallelSequence>(2,2)
@@ -1017,23 +1015,22 @@ void main_task(intptr_t unused) {
             .end()
             //move back
             .composite<BrainTree::ParallelSequence>(1,2)
- //               .leaf<IsTimeEarned>(600000) //param SJ:700000,IS:550000,600000
                 .leaf<IsDistanceEarned>(60)
                 .leaf<RunAsInstructed>(-40, -40, 3.0)
             .end()
             //rotate left with left wheel
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsTimeEarned>(300000) //param SJ:500000,IS:500000,200000,350000,300000
+                .leaf<IsDistanceEarned>(30)
                 .leaf<RunAsInstructed>(-40, 0, 0.0) 
             .end()
             //move foward
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsTimeEarned>(450000) //param SJ:450000,IS:350000,450000
+                .leaf<IsDistanceEarned>(45)
                 .leaf<RunAsInstructed>(50, 50, 0.0)
             .end()
             //turn left with right wheel
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsTimeEarned>(760000) //param SJ：1350000,IS:820000,760000
+                .leaf<IsDistanceEarned>(76)
                 .leaf<RunAsInstructed>(0, 50, 0.0)
             .end()
             //detect the distance between the robot and plastic bottle using ultrasonic sensor
@@ -1042,7 +1039,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::MemSequence>()
                 .leaf<StopNow>()
                 .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsTimeEarned>(500000) //sonar 0.5 sec
+                    .leaf<IsTimeEarned>(200000) //sonar 0.2 sec
                     .leaf<DetectSlalomPattern>()
                     .leaf<RunAsInstructed>(0, 35, 0.0)
                 .end()
@@ -1050,7 +1047,7 @@ void main_task(intptr_t unused) {
             //able to see detected
             .composite<BrainTree::MemSequence>()
                 .leaf<StopNow>()
-                .leaf<IsTimeEarned>(500000) //wait 0.5 sec
+                .leaf<IsTimeEarned>(200000) //wait 0.2 sec
             .end()
         .end()
     .build();
@@ -1120,8 +1117,6 @@ void main_task(intptr_t unused) {
             .end()
         .end()
     .build();
-
-    _log("built slalom");
 
     tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
@@ -1447,6 +1442,8 @@ void main_task(intptr_t unused) {
         .end()
     .build();
 
+//has bug
+/*
     tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1562,6 +1559,7 @@ void main_task(intptr_t unused) {
             .leaf<SetArmPosition>(10, 40)
         .end()
         .build();
+*/
 
     // テストでの値取得用
     tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder()
@@ -1593,7 +1591,7 @@ void main_task(intptr_t unused) {
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
         .end()
     .build();
-
+*/
 
     } /* if (prof->getValueAsStr("COURSE") == "R") */
 

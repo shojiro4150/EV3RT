@@ -104,12 +104,12 @@ static int _COURSE = 1;
 
 //define where to jump from caliration:1~10
 #ifndef JUMP_CALIBRATION
-#define JUMP_CALIBRATION        0
+#define JUMP_CALIBRATION        2
 #endif
 
 //define which pattern to jump from slalom check to slalom second
 #ifndef JUMP_SLALOM
-#define JUMP_SLALOM             false
+#define JUMP_SLALOM             true
 #endif
 
 //define where to jump from slalom second to garage:1~7
