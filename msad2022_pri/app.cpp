@@ -1572,7 +1572,6 @@ void main_task(intptr_t unused) {
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
         .end()
     .build();
-*/
 
     } /* if (prof->getValueAsStr("COURSE") == "R") */
 
