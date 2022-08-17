@@ -1101,7 +1101,7 @@ void main_task(intptr_t unused) {
         .end()
     .build();
 
-      tr_block_y     = nullptr;
+    tr_block_y     = nullptr;
 
     tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
@@ -1425,7 +1425,7 @@ void main_task(intptr_t unused) {
             .leaf<SetArmPosition>(10, 40)
         .end()
     .build();
-
+/*
     tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1534,14 +1534,14 @@ void main_task(intptr_t unused) {
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<RunAsInstructed>(prof->getValueAsNum("GO_LM7"),
                                        prof->getValueAsNum("GO_RM7"),0.0) 
-                .leaf<IsColorDetected>(CL_GREEN)  
+                .leaf<IsColorDetected>(CL_YELLOW)  
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .leaf<SetArmPosition>(10, 40)
         .end()
         .build();
-
+*/
     // テストでの値取得用
     tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
