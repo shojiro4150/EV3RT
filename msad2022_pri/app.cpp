@@ -1099,8 +1099,8 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(40, 40, 0.0)
             .end()
         .end()
-    .build();]
-    
+    .build();
+
       tr_block_r     = nullptr;
       tr_block_g     = nullptr;
       tr_block_b     = nullptr;
