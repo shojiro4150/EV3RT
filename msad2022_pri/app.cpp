@@ -1214,8 +1214,7 @@ void main_task(intptr_t unused) {
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
         .end()
     .build();
-    tr_block_g     = nullptr;
-/*
+
     tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1331,7 +1330,7 @@ void main_task(intptr_t unused) {
             .leaf<SetArmPosition>(10, 40)
         .end()
     .build();
-*/
+
     tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
