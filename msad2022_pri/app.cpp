@@ -750,12 +750,12 @@ void main_task(intptr_t unused) {
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
                    .leaf<IsDistanceEarned>(prof->getValueAsNum("DIST1"))
                    //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))
-                   .leaf<StopNow>()
-                   //.leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
-                   //prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
-                   //prof->getValueAsNum("I_CONST1"), 
-                   //prof->getValueAsNum("D_CONST1"), 
-                   //prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
+                   //.leaf<StopNow>()
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 
+                   prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     //ラインの交差地点直前から検知するまで減速
                 .composite<BrainTree::ParallelSequence>(1,2)
