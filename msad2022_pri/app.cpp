@@ -1213,7 +1213,7 @@ void main_task(intptr_t unused) {
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
         .end()
-        .build();
+    .build();
 
     tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
@@ -1329,7 +1329,7 @@ void main_task(intptr_t unused) {
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .leaf<SetArmPosition>(10, 40)
         .end()
-        .build();
+    .build();
 
     tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
@@ -1532,7 +1532,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsTimeEarned>(5000000)
                 .leaf<RunAsInstructed>(prof->getValueAsNum("GO_LM7"),
                                        prof->getValueAsNum("GO_RM7"),0.0) 
-                .leaf<IsColorDetected>(CL_YELLOW)  
+                .leaf<IsColorDetected>(CL_GREEN)  
             .end()
             .leaf<StopNow>()
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
