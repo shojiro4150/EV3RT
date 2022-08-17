@@ -712,6 +712,8 @@ void main_task(intptr_t unused) {
     rightMotor->setPWM(0);
     armMotor->reset();
 
+    _log("before behavier tree.");
+
 /*
     === BEHAVIOR TREE DEFINITION STARTS HERE ===
     A Behavior Tree serves as a blueprint for a LEGO object while a Node class serves as each Lego block used in the object.
@@ -763,6 +765,8 @@ void main_task(intptr_t unused) {
 
     } else { /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
       _COURSE = 1;
+
+      _log("before linetrace tree");
 
       tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::ParallelSequence>(1,2)
@@ -1116,6 +1120,8 @@ void main_task(intptr_t unused) {
             .end()
         .end()
     .build();
+
+    _log("built slalom");
 
     tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
@@ -1595,9 +1601,14 @@ void main_task(intptr_t unused) {
     === BEHAVIOR TREE DEFINITION ENDS HERE ===
 */
 
+    _log("before cyclic task.");
+    _log("state is %d", state);
+
     /* register cyclic handler to EV3RT */
 //    sta_cyc(CYC_VIDEO_TSK);
     sta_cyc(CYC_UPD_TSK);
+
+    _log("after cyclic task.");
 
     /* indicate initialization completion by LED color */
     _log("initialization completed.");
@@ -1688,7 +1699,7 @@ void update_task(intptr_t unused) {
 
     int32_t sonarDistance = sonarSensor->getDistance();
 
-    _log("red=%03d,green=%03d,blue=%03d,dist=%06d,azi=%03d,deg=%03d,locX=%06d,locY=%06d,ang=%03d,angR=%03d,sonar=%04d",
+    _log("red=%03d,green=%03d,blue=%03d,dist=%05d,azi=%03d,deg=%03d,locX=%05d,locY=%05d,ang=%03d,angR=%03d,sonar=%04d",
             cur_rgb.r,cur_rgb.g,cur_rgb.b,distance,azimuth,degree,locX,locY,ang,angR,sonarDistance);
     
 /*
@@ -2062,6 +2073,7 @@ void update_task(intptr_t unused) {
         _log("State changed: ST_ENDING to ST_END");
         break;    
     case ST_INITIAL:    /* do nothing */
+        _log("entered state machine");
     case ST_END:        /* do nothing */
     default:            /* do nothing */
         break;

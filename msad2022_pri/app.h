@@ -33,7 +33,7 @@ extern "C" {
 
 extern void main_task(intptr_t unused);
 extern void update_task(intptr_t unused);
-extern void video_task(intptr_t unused);
+//extern void video_task(intptr_t unused);
 extern void task_activator(intptr_t tskid);
 
 #endif /* TOPPERS_MACRO_ONLY */

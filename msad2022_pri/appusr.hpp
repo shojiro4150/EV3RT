@@ -59,11 +59,11 @@ extern Plotter*     plotter;
    this is also where -std=gnu++11 option is necessary */
 #ifdef LOG_ON_CONSOL
 #define _log(fmt, ...) \
-    syslog(LOG_NOTICE, "%10u, %s: " fmt, \
+    syslog(LOG_NOTICE, "%08u, %s: " fmt, \
     ev3clock->now(), __PRETTY_FUNCTION__, ##__VA_ARGS__)
 #else
 #define _log(fmt, ...) \
-    printf("%10u, %s: " fmt "\n", \
+    printf("%08u, %s: " fmt "\n", \
     ev3clock->now(), __PRETTY_FUNCTION__, ##__VA_ARGS__)
     // temp fix 2022/6/20 W.Taniguchi, as Bluetooth not implemented yet
     /* fprintf(bt, "%08u, %s: " fmt "\n", \ */
