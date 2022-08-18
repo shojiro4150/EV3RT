@@ -313,7 +313,7 @@ public:
                 }
                 break;
             case CL_JETBLACK_YMNK:
-                if (cur_rgb.r <=10 && cur_rgb.g <=10 && cur_rgb.b <=10) { 
+                if (cur_rgb.r <=6 && cur_rgb.g <=6 && cur_rgb.b <=6) { 
                     _log("ODO=%05d, CL_JETBLACK_YMNK detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -746,16 +746,16 @@ void main_task(intptr_t unused) {
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
     //GATE1を通過後ラインの交差地点地点直前まで
-                .composite<BrainTree::ParallelSequence>(2,2)
-                   //.leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
+                .composite<BrainTree::ParallelSequence>(1,2)
+                   .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
                    .leaf<IsDistanceEarned>(prof->getValueAsNum("DIST1"))
                    //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))
-                   .leaf<StopNow>()
-                   //.leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
-                   //prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
-                   //prof->getValueAsNum("I_CONST1"), 
-                   //prof->getValueAsNum("D_CONST1"), 
-                   //prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
+                   //leaf<StopNow>()
+                   .leaf<TraceLine>(prof->getValueAsNum("SPEED1"), 
+                   prof->getValueAsNum("GS_TARGET1"), prof->getValueAsNum("P_CONST1"), 
+                   prof->getValueAsNum("I_CONST1"), 
+                   prof->getValueAsNum("D_CONST1"), 
+                   prof->getValueAsNum("srewrate1"), TS_OPPOSITE)//ライントレース1,右のライン検知
                 .end()
     //ラインの交差地点直前から検知するまで減速
                 .composite<BrainTree::ParallelSequence>(1,2)
