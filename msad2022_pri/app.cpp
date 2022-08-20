@@ -1015,22 +1015,22 @@ void main_task(intptr_t unused) {
             .end()
             //move back
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsDistanceEarned>(60)
+                .leaf<IsTimeEarned>(600000)
                 .leaf<RunAsInstructed>(-40, -40, 3.0)
             .end()
             //rotate left with left wheel
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsDistanceEarned>(30)
+                .leaf<IsTimeEarned>(300000)
                 .leaf<RunAsInstructed>(-40, 0, 0.0) 
             .end()
             //move foward
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsDistanceEarned>(45)
+                .leaf<IsTimeEarned>(400000)
                 .leaf<RunAsInstructed>(50, 50, 0.0)
             .end()
             //turn left with right wheel
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsDistanceEarned>(76)
+                .leaf<IsTimeEarned>(760000)
                 .leaf<RunAsInstructed>(0, 50, 0.0)
             .end()
             //detect the distance between the robot and plastic bottle using ultrasonic sensor
@@ -1056,7 +1056,7 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,2) //後半第一スラローム開始
                 .leaf<IsDistanceEarned>(30)
-                .leaf<RunAsInstructed>(-40, 0, 0.0)
+                .leaf<RunAsInstructed>(-50, 0, 0.0)
             .end()
             .composite<BrainTree::ParallelSequence>(1,2)
                 .leaf<IsDistanceEarned>(50)
@@ -1071,8 +1071,13 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(40, 40, 0.0)
             .end()
             .composite<BrainTree::ParallelSequence>(1,2) //後半第二スラローム開始
-                .leaf<IsDistanceEarned>(200)
+                .leaf<IsDistanceEarned>(50)
                 .leaf<RunAsInstructed>(50, 15, 0.0)
+            .end()
+            //able to see end
+            .composite<BrainTree::MemSequence>()
+                .leaf<StopNow>()
+                .leaf<IsTimeEarned>(200000) //wait 0.2 sec
             .end()
         .end()
     .build();
@@ -1591,7 +1596,6 @@ void main_task(intptr_t unused) {
             .leaf<IsTimeEarned>(30000000) // wait 3 seconds
         .end()
     .build();
-*/
 
     } /* if (prof->getValueAsStr("COURSE") == "R") */
 
