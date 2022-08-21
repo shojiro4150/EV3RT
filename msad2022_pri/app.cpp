@@ -117,18 +117,6 @@ public:
     }
 };
 
-class IsCenterOn : public BrainTree::Node {
-public:
-    Status update() override {
-        if (ev3_button_is_pressed(ENTER_BUTTON)) {
-            _log("center button pressed.");
-            return Status::Success;
-        } else {
-            return Status::Failure;
-        }
-    }
-};
-
 /*
     usage:
     ".leaf<IsSonarOn>(distance)"
