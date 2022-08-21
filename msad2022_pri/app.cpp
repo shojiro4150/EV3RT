@@ -117,6 +117,18 @@ public:
     }
 };
 
+class IsCeneterOn : public BrainTree::Node {
+public:
+    Status update() override {
+        if (ev3_button_is_pressed(ENTER_BUTTON)) {
+            _log("center button pressed.");
+            return Status::Success;
+        } else {
+            return Status::Running;
+        }
+    }
+};
+
 /*
     usage:
     ".leaf<IsSonarOn>(distance)"
@@ -852,6 +864,10 @@ void main_task(intptr_t unused) {
     tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<IsCeneterOn>() 
+                .leaf<IsTimeEarned>(10000000) 
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<SetArmPosition>(10, 40) 
                 .leaf<IsTimeEarned>(500000) 
             .end()
@@ -1445,6 +1461,10 @@ void main_task(intptr_t unused) {
 
     tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
+            .composite<BrainTree::ParallelSequence>(1,3)
+                .leaf<SetArmPosition>(10, 40) 
+                .leaf<IsTimeEarned>(500000) 
+            .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<SetArmPosition>(10, 40) 
                 .leaf<IsTimeEarned>(500000) 
