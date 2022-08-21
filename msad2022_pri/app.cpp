@@ -1442,7 +1442,6 @@ void main_task(intptr_t unused) {
         .end()
         .build();
 
-
     tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
