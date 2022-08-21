@@ -1709,8 +1709,8 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(600000) // break after 10 seconds
-                .leaf<RunAsInstructed>(-50,
-                                       50,0.0) //左に旋回。ライントレース準備。
+                .leaf<RunAsInstructed>(-52,
+                                       52,0.0) //左に旋回。ライントレース準備。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) //少し前進。ライントレース準備。
