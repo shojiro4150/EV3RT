@@ -1408,12 +1408,7 @@ void main_task(intptr_t unused) {
                                        60,0.0)     
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(800000) 
-                .leaf<TraceLine>(35,
-                                 GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
-            .end()
-            .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1000000) 
+                .leaf<IsTimeEarned>(1500000) 
                 .leaf<TraceLine>(35,
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
