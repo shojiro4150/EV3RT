@@ -1342,7 +1342,6 @@ void main_task(intptr_t unused) {
 
     tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
-            .leaf<IsCenterOn>() 
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<SetArmPosition>(10, 40) 
                 .leaf<IsTimeEarned>(500000) 
