@@ -117,6 +117,18 @@ public:
     }
 };
 
+class IsCenterOn : public BrainTree::Node {
+public:
+    Status update() override {
+        if (ev3_button_is_pressed(ENTER_BUTTON)) {
+            _log("center button pressed.");
+            return Status::Success;
+        } else {
+            return Status::Failure;
+        }
+    }
+};
+
 /*
     usage:
     ".leaf<IsSonarOn>(distance)"
@@ -1330,6 +1342,7 @@ void main_task(intptr_t unused) {
 
     tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
+            .leaf<IsCenterOn>() 
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<SetArmPosition>(10, 40) 
                 .leaf<IsTimeEarned>(500000) 
