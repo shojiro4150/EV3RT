@@ -788,11 +788,11 @@ void main_task(intptr_t unused) {
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
                 .end()
                 .leaf<IsTimeEarned>(1000000) // break after 10 seconds
-                .leaf<RunAsInstructed>(45,
-                                       45,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
+                .leaf<RunAsInstructed>(48,
+                                       48,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1000000)  // 本線ラインに戻ってくる
+                .leaf<IsTimeEarned>(9500000)  // 本線ラインに戻ってくる
                 .leaf<RunAsInstructed>(75,
                                        40,0.0)          
             .end()
