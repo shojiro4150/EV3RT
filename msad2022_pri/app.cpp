@@ -1419,8 +1419,8 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(500000) // 全身しながら大きく左に向けて旋回。黄色を目指す。
-                .leaf<RunAsInstructed>(-50,
-                                       50,0.0)       
+                .leaf<RunAsInstructed>(-55,
+                                       55,0.0)       
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_YELLOW)    // 黄色検知後、方向立て直す。
