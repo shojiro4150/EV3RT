@@ -1521,7 +1521,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(600000) // break after 10 seconds
                 .leaf<RunAsInstructed>(44,
-                                       -44.0)   //青検知後は大きく右に旋回    
+                                       -44,0.0)   //青検知後は大きく右に旋回    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1000000) // break after 10 seconds
