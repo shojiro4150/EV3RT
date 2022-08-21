@@ -820,7 +820,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_WHITE)  
-                .leaf<TraceLine>(38,
+                .leaf<TraceLine>(35,
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
