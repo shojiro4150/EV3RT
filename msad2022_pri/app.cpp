@@ -787,12 +787,12 @@ void main_task(intptr_t unused) {
                     .leaf<IsColorDetected>(CL_WHITE) //グレー検知までライントレース    
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
                 .end()
-                .leaf<IsTimeEarned>(1500000) // break after 10 seconds
-                .leaf<RunAsInstructed>(40,
-                                       40,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
+                .leaf<IsTimeEarned>(1000000) // break after 10 seconds
+                .leaf<RunAsInstructed>(45,
+                                       45,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1200000)  // 本線ラインに戻ってくる
+                .leaf<IsTimeEarned>(1000000)  // 本線ラインに戻ってくる
                 .leaf<RunAsInstructed>(75,
                                        40,0.0)          
             .end()
@@ -815,12 +815,12 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(800000) 
-                .leaf<TraceLine>(35,
+                .leaf<TraceLine>(38,
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_WHITE)  
-                .leaf<TraceLine>(35,
+                .leaf<TraceLine>(38,
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -830,11 +830,11 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_YELLOW)    // 黄色検知後、方向立て直す。
-                .leaf<RunAsInstructed>(45,
-                                       45,0.0)    
+                .leaf<RunAsInstructed>(50,
+                                       50,0.0)    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)   
-                .leaf<IsTimeEarned>(500000) 
+                .leaf<IsTimeEarned>(700000) 
                 .leaf<RunAsInstructed>(30,
                                        80,0.0) 
                 .leaf<IsColorDetected>(CL_RED)   
@@ -901,9 +901,9 @@ void main_task(intptr_t unused) {
                     .leaf<IsColorDetected>(CL_WHITE) //グレー検知までライントレース    
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
                 .end()
-                .leaf<IsTimeEarned>(1500000) // break after 10 seconds
-                .leaf<RunAsInstructed>(40,
-                                       40,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
+                .leaf<IsTimeEarned>(1000000) // break after 10 seconds
+                .leaf<RunAsInstructed>(45,
+                                       45,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(600000) // break after 10 seconds
@@ -923,7 +923,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //純粋な青検知までライントレース
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(600000) // break after 10 seconds
+                .leaf<IsTimeEarned>(300000) // break after 10 seconds
                 .leaf<RunAsInstructed>(44,
                                        -44,0.0)   //青検知後は大きく右に旋回    
             .end()
@@ -945,7 +945,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_WHITE)  
-                .leaf<TraceLine>(35, 
+                .leaf<TraceLine>(37, 
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -964,6 +964,7 @@ void main_task(intptr_t unused) {
             .leaf<SetArmPosition>(10, 40)
         .end()
         .build();
+
       tr_block_b     = nullptr;
       tr_block_y     = nullptr;
       tr_block_d     = nullptr;
