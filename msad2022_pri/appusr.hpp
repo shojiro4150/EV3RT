@@ -103,7 +103,7 @@ static int _COURSE;
 #endif
 
 #ifndef JUMP_CALIBRATION
-#define JUMP_CALIBRATION        7
+#define JUMP_CALIBRATION        8
 #endif
 
 #ifndef JUMP_SLALOM
