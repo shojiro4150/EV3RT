@@ -1704,8 +1704,8 @@ void main_task(intptr_t unused) {
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
                 .end()
                 .leaf<IsTimeEarned>(1500000) // break after 10 seconds
-                .leaf<RunAsInstructed>(40,
-                                       40,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
+                .leaf<RunAsInstructed>(50,
+                                       50,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(600000) // break after 10 seconds
@@ -1725,7 +1725,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //純粋な青検知までライントレース
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(350000) // break after 10 seconds
+                .leaf<IsTimeEarned>(300000) // break after 10 seconds
                 .leaf<RunAsInstructed>(44,
                                        -44,0.0)   //青検知後は大きく右に旋回    
             .end()
