@@ -729,18 +729,6 @@ void main_task(intptr_t unused) {
 
     /* BEHAVIOR FOR THE RIGHT COURSE STARTS HERE */
     if (prof->getValueAsStr("COURSE") == "R") {
-      tr_run = nullptr;
-      tr_slalom_first = nullptr;
-      tr_slalom_check = nullptr;
-      tr_slalom_second_a = nullptr;
-      tr_slalom_second_b = nullptr;
-      tr_block_r     = nullptr;
-      tr_block_g     = nullptr;
-      tr_block_b     = nullptr;
-      tr_block_y     = nullptr;
-      tr_block_d     = nullptr;
-
-    } else { /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
       tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::ParallelSequence>(1,2)
             .leaf<IsBackOn>()
@@ -864,6 +852,19 @@ void main_task(intptr_t unused) {
             .end()
         .end()
     .build();
+      tr_slalom_first = nullptr;
+      tr_slalom_check = nullptr;
+      tr_slalom_second_a = nullptr;
+      tr_slalom_second_b = nullptr;
+      tr_block_r     = nullptr;
+      tr_block_g     = nullptr;
+      tr_block_b     = nullptr;
+      tr_block_y     = nullptr;
+      tr_block_d     = nullptr;
+
+    } else { /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
+    tr_run = nullptr;
+      
 
     tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::ParallelSequence>(1,2)
