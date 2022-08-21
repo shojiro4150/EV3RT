@@ -1565,32 +1565,43 @@ void main_task(intptr_t unused) {
                 .leaf<IsTimeEarned>(500000) 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+                .leaf<TraceLine>(40,
+                                 GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_BLUE) 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(900000) // 後ろ向き走行。狙いは黒線。
-                .leaf<RunAsInstructed>(-30,-80,0.0)      
+                .leaf<RunAsInstructed>(-30,
+                                       -80,
+                                       0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(1700000) // 後ろ向き走行。狙いは黒線。
-                .leaf<RunAsInstructed>(-50,-50,0.0)    
+                .leaf<RunAsInstructed>(-50,
+                                       -50,
+                                       0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(4000000) // 後ろ向き走行。狙いは黒線。
-                .leaf<RunAsInstructed>(-35,-35,0.0)    
+                .leaf<RunAsInstructed>(-35,
+                                       -35,
+                                       0.0)        
                 .leaf<IsColorDetected>(CL_BLACK)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(900000) // 黒線検知後、ライントレース準備
-                .leaf<RunAsInstructed>(-30,60,0.0)      
+                .leaf<RunAsInstructed>(-30,
+                                       60,
+                                       0.0)     
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+                .leaf<TraceLine>(35,
+                                 GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsTimeEarned>(1000000) // 黒線検知後、ライントレース準備
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
+                .leaf<TraceLine>(40, 
+                                 GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
@@ -1600,7 +1611,7 @@ void main_task(intptr_t unused) {
                     .leaf<IsColorDetected>(CL_GRAY) //グレー検知までライントレース   
                 .end()
                 .leaf<IsTimeEarned>(1500000) // break after 10 seconds
-                .leaf<RunAsInstructed>(40,40,0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
+                .leaf<RunAsInstructed>(45,45,0.0)  //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsAngleSmaller>(-15)
@@ -1630,14 +1641,14 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsAngleLarger>(75)
-                .leaf<RunAsInstructed>(55,-55,0.0)      
+                .leaf<RunAsInstructed>(60,-55,0.0)      
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_WHITE)  
-                .leaf<TraceLine>(34, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
+                .leaf<TraceLine>(37, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(3000000)
+                .leaf<IsTimeEarned>(2000000)
                 .leaf<RunAsInstructed>(40,40,0.0)  //目的の色検知まで前進
             .end() 
             .composite<BrainTree::ParallelSequence>(1,3)
