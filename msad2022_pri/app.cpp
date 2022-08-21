@@ -1385,7 +1385,7 @@ void main_task(intptr_t unused) {
                                        40,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1200000)  // 本線ラインに戻ってくる
+                .leaf<IsTimeEarned>(1100000)  // 本線ラインに戻ってくる
                 .leaf<RunAsInstructed>(75,
                                        40,0.0)          
             .end()
@@ -1408,7 +1408,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(800000) 
-                .leaf<TraceLine>(35,
+                .leaf<TraceLine>(38,
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
