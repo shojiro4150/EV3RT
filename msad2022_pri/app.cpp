@@ -1423,8 +1423,8 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsColorDetected>(CL_YELLOW)    // 黄色検知後、方向立て直す。
-                .leaf<RunAsInstructed>(45,
-                                       45,0.0)    
+                .leaf<RunAsInstructed>(46,
+                                       46,0.0)    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)   
                 .leaf<IsTimeEarned>(800000) 
