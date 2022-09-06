@@ -1578,10 +1578,11 @@ void update_task(intptr_t unused) {
     int32_t angR = plotter->getAngR();
 
     int32_t sonarDistance = sonarSensor->getDistance();
+    int32_t gyroAngle = gyroSensor->getAngle(); 
 
     _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
 
-    _log("dist=%d azi=%d deg=%d locX=%d locY=%d ang=%d angR=%d",distance,azimuth,degree,locX,locY,ang,angR);
+    _log("dist=%d azi=%d deg=%d locX=%d locY=%d ang=%d angR=%d gyroAngle=%03d",distance,azimuth,degree,locX,locY,ang,angR,gyroAngle);
     _log("sonar=%d",sonarDistance);
     
 /*
