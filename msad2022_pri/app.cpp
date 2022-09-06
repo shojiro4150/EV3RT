@@ -745,7 +745,9 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::ParallelSequence>(1,3)
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
+                .composite<BrainTree::ParallelSequence>(1,2)
                 .leaf<IsTouchOn>()
+                .end()
     //GATE1を通過後ラインの交差地点地点直前まで
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
