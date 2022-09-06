@@ -711,9 +711,9 @@ void main_task(intptr_t unused) {
     tr_calibration = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             // temp fix 2022/6/20 W.Taniguchi, as no touch sensor available on RasPike
-            //.decorator<BrainTree::UntilSuccess>()
-            //    .leaf<IsTouchOn>()
-            //.end()
+            .decorator<BrainTree::UntilSuccess>()
+                .leaf<IsTouchOn>()
+            .end()
             .leaf<ResetClock>()
         .end()
     .build();
