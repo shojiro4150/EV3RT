@@ -712,7 +712,7 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::MemSequence>()
             // temp fix 2022/6/20 W.Taniguchi, as no touch sensor available on RasPike
             //.decorator<BrainTree::UntilSuccess>()
-            leaf<IsBackOn>()
+            .leaf<IsBackOn>()
             //.end()
             .leaf<ResetClock>()
         .end()
