@@ -746,7 +746,7 @@ void main_task(intptr_t unused) {
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
                 .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsTouchOn>()
+                .leaf<IsBackOn>()
                 .end()
     //GATE1を通過後ラインの交差地点地点直前まで
                 .composite<BrainTree::ParallelSequence>(1,2)
