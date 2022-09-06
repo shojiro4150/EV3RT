@@ -742,7 +742,7 @@ void main_task(intptr_t unused) {
 
     } else { /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
     tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder()
-        .composite<BrainTree::ParallelSequence>(1,2)
+        .composite<BrainTree::ParallelSequence>(1,3)
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
                 .leaf<IsBackOn>()
