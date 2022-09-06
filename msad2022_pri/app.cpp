@@ -712,7 +712,7 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::MemSequence>()
             // temp fix 2022/6/20 W.Taniguchi, as no touch sensor available on RasPike
             //.decorator<BrainTree::UntilSuccess>()
-            //    .leaf<IsTouchOn>()
+            leaf<IsBackOn>()
             //.end()
             .leaf<ResetClock>()
         .end()
@@ -742,10 +742,9 @@ void main_task(intptr_t unused) {
 
     } else { /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
     tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder()
-        .composite<BrainTree::ParallelSequence>(1,3)
+        .composite<BrainTree::ParallelSequence>(1,2)
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
-                .leaf<IsBackOn>()
     //GATE1を通過後ラインの交差地点地点直前まで
                 .composite<BrainTree::ParallelSequence>(1,2)
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
