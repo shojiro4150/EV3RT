@@ -711,9 +711,9 @@ void main_task(intptr_t unused) {
     tr_calibration = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             // temp fix 2022/6/20 W.Taniguchi, as no touch sensor available on RasPike
-            .decorator<BrainTree::UntilSuccess>()
-                .leaf<IsTouchOn>()
-            .end()
+            //.decorator<BrainTree::UntilSuccess>()
+            //    .leaf<IsTouchOn>()
+            //.end()
             .leaf<ResetClock>()
         .end()
     .build();
@@ -747,6 +747,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::MemSequence>()
     //GATE1を通過後ラインの交差地点地点直前まで
                 .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTouchOn>()
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
                    .leaf<IsDistanceEarned>(prof->getValueAsNum("DIST1"))
                    //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))
