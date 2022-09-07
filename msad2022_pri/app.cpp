@@ -1466,7 +1466,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsTimeEarned>(500000) 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<TraceLine>(45,
+                .leaf<TraceLine>(40,
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_BLUE) 
             .end()
@@ -1682,20 +1682,16 @@ void main_task(intptr_t unused) {
     tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsCeneterOn>() 
-                .leaf<IsTimeEarned>(120000000) 
-            .end()
-            .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<SetArmPosition>(10, 40) 
                 .leaf<IsTimeEarned>(500000) 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<TraceLine>(40,
+                .leaf<TraceLine>(45,
                                  GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)  
                 .leaf<IsColorDetected>(CL_BLUE) 
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(900000) // 後ろ向き走行。狙いは黒線。
+                .leaf<IsTimeEarned>(1000000) // 後ろ向き走行。狙いは黒線。
                 .leaf<RunAsInstructed>(-30,
                                        -80,
                                        0.0)      
