@@ -748,7 +748,8 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::MemSequence>()
     //GATE1を通過後ラインの交差地点地点直前まで
                 .leaf<IsBackOn>()
-                .composite<BrainTree::ParallelSequence>(1,2)
+                .composite<BrainTree::ParallelSequence>(2,2)
+                   .leaf<SetArmPosition>(0, 40) 
                    .leaf<IsColorDetected>(CL_JETBLACK_YMNK)//JETBLACKを検知
                    .leaf<IsDistanceEarned>(prof->getValueAsNum("DIST1"))
                    //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1"))
