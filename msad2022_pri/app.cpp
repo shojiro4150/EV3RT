@@ -615,6 +615,37 @@ private:
     int32_t prevAngle;
 };
 
+
+class IsAnglerVelocitySmaller : public BrainTree::Node {
+public:
+    IsAnglerVelocitySmaller(int ang) : angle(ang) {}
+    Status update() override {
+        int32_t curAngle = gyroSensor->getAnglerVelocity(); 
+        if (curAngle <= angle){
+            return Status::Success;
+        } else {
+            return Status::Running;
+        }
+    }
+protected:
+    int32_t angle;
+};
+
+class IsAnglerVelocityLarger : public BrainTree::Node {
+public:
+    IsAnglerVelocityLarger(int ang) : angle(ang) {}
+    Status update() override {
+        int32_t curAngle = gyroSensor->getAnglerVelocity(); 
+        if (curAngle >= angle){
+            return Status::Success;
+        } else {
+            return Status::Running;
+        }
+    }
+protected:
+    int32_t angle;
+};
+
 /*
     usage:
     ".leaf<SetArmPosition>(target_degree, pwm)"
@@ -898,21 +929,32 @@ void main_task(intptr_t unused) {
         .composite<BrainTree::MemSequence>()
             // ライントレースから引継ぎして、直前の青線まで走る
             .composite<BrainTree::ParallelSequence>(1,2)
-            .leaf<IsTimeEarned>(1000000)
-            .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+                .leaf<IsTimeEarned>(1000000)
+                .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
-            .composite<BrainTree::ParallelSequence>(1,2)
-            .composite<BrainTree::MemSequence>()
-                .leaf<IsColorDetected>(CL_BLACK)
-                .leaf<IsColorDetected>(CL_BLUE)
-            .end()
-            .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .composite<BrainTree::ParallelSequence>(2,2)
+                .leaf<SetArmPosition>(0, 40) 
+                .composite<BrainTree::MemSequence>()
+                    .leaf<SetArmPosition>(0, 40) 
+                    .leaf<IsColorDetected>(CL_BLACK)
+                    .leaf<IsColorDetected>(CL_BLUE)
+                .end()
+                .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
             // 台にのる　勢いが必要
+            .composite<BrainTree::MemSequence>()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<IsAnglerVelocityLarger>(30)
+                    .leaf<RunAsInstructed>(70, 70, 0.0)
+                .end()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<IsAnglerVelocitySmaller>(-30)
+                    .leaf<RunAsInstructed>(70, 70, 0.0)
+                .end()
             .composite<BrainTree::ParallelSequence>(1,2)
-//                    .leaf<IsDistanceEarned>(150)
-                .leaf<IsTimeEarned>(1500000)
-                .leaf<RunAsInstructed>(70, 70, 0.0)
+                    .leaf<IsAnglerVelocityLarger>(25)
+                    .leaf<RunAsInstructed>(70, 70, 0.0)
+                .end()
             .end()
 /*
             // 勢いを殺す
@@ -930,8 +972,8 @@ void main_task(intptr_t unused) {
             .end()
 */
             .composite<BrainTree::ParallelSequence>(1,2)//初期位置調整のために、台上で短距離ライントレース
-                .leaf<IsDistanceEarned>(30)
-                .leaf<TraceLine>(30, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+                .leaf<IsDistanceEarned>(9999999)
+                .leaf<TraceLine>(0, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
                 //.leaf<RunAsInstructed>(40, 20, 0.0)
             .end()
             .composite<BrainTree::ParallelSequence>(1,2)//第一スラローム開始
