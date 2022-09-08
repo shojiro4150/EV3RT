@@ -579,7 +579,10 @@ class ClimbBoard : public BrainTree::Node {
 public:
     ClimbBoard(int direction, int count) : dir(direction), cnt(count) {}
     Status update() override {
-        curAngle = gyroSensor->getAngle();
+        // スピード70で走る
+        // 1　仰角の加速度が＋**°/10msecになったことを検知する
+        // 2　仰角の加速度が-**°/10msecになったことを検知する
+        gyroAcceleration = gyroSensor->getAnglerVelocity();
             if (cnt >= 1) {
                 leftMotor->setPWM(0);
                 rightMotor->setPWM(0);
@@ -594,10 +597,10 @@ public:
                 leftMotor->setPWM(23);
                 rightMotor->setPWM(23);
 
-                if (curAngle < -9) {
-                    prevAngle = curAngle;
+                if (gyroAcceleration < -9) {
+                    prevAngle = gyroAcceleration;
                 }
-                if (prevAngle < -9 && curAngle >= 0) {
+                if (prevAngle < -9 && gyroAcceleration >= 0) {
                     ++cnt;
                     _log("ON BOARD");
                 }
@@ -607,7 +610,8 @@ public:
 private:
     int8_t dir;
     int cnt;
-    int32_t curAngle;
+    //int32_t curAngle;
+    int32_t gyroAcceleration;
     int32_t prevAngle;
 };
 
@@ -907,7 +911,7 @@ void main_task(intptr_t unused) {
             // 台にのる　勢いが必要
             .composite<BrainTree::ParallelSequence>(1,2)
 //                    .leaf<IsDistanceEarned>(150)
-                .leaf<IsTimeEarned>(150000)
+                .leaf<IsTimeEarned>(1500000)
                 .leaf<RunAsInstructed>(70, 70, 0.0)
             .end()
 /*
@@ -1070,10 +1074,17 @@ void main_task(intptr_t unused) {
                 .leaf<IsDistanceEarned>(50)
                 .leaf<RunAsInstructed>(40, 40, 0.0)
             .end()
-            .composite<BrainTree::ParallelSequence>(1,2) //後半第二スラローム開始
-                .leaf<IsDistanceEarned>(50)
+            //ここでペットボトル4,5の間に進入する直前
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(100)
+                .leaf<RunAsInstructed>(40, 40, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(30)
                 .leaf<RunAsInstructed>(50, 15, 0.0)
             .end()
+            //後半第二スラローム開始
+
             //able to see end
             .composite<BrainTree::MemSequence>()
                 .leaf<StopNow>()
@@ -1700,9 +1711,10 @@ void update_task(intptr_t unused) {
     int32_t angR = plotter->getAngR();
 
     int32_t sonarDistance = sonarSensor->getDistance();
+    int32_t gyroAcceleration = gyroSensor->getAnglerVelocity();
 
-    _log("red=%03d,green=%03d,blue=%03d,dist=%05d,azi=%03d,deg=%03d,locX=%05d,locY=%05d,ang=%03d,angR=%03d,sonar=%04d",
-            cur_rgb.r,cur_rgb.g,cur_rgb.b,distance,azimuth,degree,locX,locY,ang,angR,sonarDistance);
+    _log("red=%03d,green=%03d,blue=%03d,dist=%05d,azi=%03d,deg=%03d,locX=%05d,locY=%05d,ang=%03d,angR=%03d,sonar=%04d,gyro=%03d",
+            cur_rgb.r,cur_rgb.g,cur_rgb.b,distance,azimuth,degree,locX,locY,ang,angR,sonarDistance,gyroAcceleration);
     
 /*
     === STATE MACHINE DEFINITION STARTS HERE ===
