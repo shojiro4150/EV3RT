@@ -925,44 +925,42 @@ void main_task(intptr_t unused) {
         .end()
     .build();
 
-    tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder()
+tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             // ライントレースから引継ぎして、直前の青線まで走る
             .composite<BrainTree::ParallelSequence>(1,2)
                 .leaf<IsTimeEarned>(1000000)
                 .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
-            .composite<BrainTree::ParallelSequence>(2,2)
-                .leaf<SetArmPosition>(0, 40) 
+            .composite<BrainTree::ParallelSequence>(1,2)
                 .composite<BrainTree::MemSequence>()
-                    .leaf<SetArmPosition>(0, 40) 
                     .leaf<IsColorDetected>(CL_BLACK)
                     .leaf<IsColorDetected>(CL_BLUE)
                 .end()
                 .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
             // 台にのる　勢いが必要
-            .composite<BrainTree::MemSequence>()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsAnglerVelocityLarger>(30)
-                    .leaf<RunAsInstructed>(70, 70, 0.0)
-                .end()
-                .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsAnglerVelocitySmaller>(-30)
-                    .leaf<RunAsInstructed>(70, 70, 0.0)
-                .end()
-            .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsAnglerVelocityLarger>(25)
-                    .leaf<RunAsInstructed>(70, 70, 0.0)
-                .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//青検知の後、台乗上前にギリギリまでトレース
+                .leaf<IsDistanceEarned>(360)
+                .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(180)
+                .leaf<TraceLine>(70, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_CENTER)
+            .end()
+/*// みかのコード
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(400)
+                .leaf<RunAsInstructed>(70, 70, 0.0)
+            .end()
+*///
 /*
             // 勢いを殺す
             .composite<BrainTree::MemSequence>()
                 .leaf<StopNow>()
                 .leaf<IsTimeEarned>(200000) //sonar 0.2 sec
             .end()
-*/           
+*/
 /*
             .composite<BrainTree::ParallelSequence>(1,2)
             .composite<BrainTree::MemSequence>()
@@ -971,13 +969,13 @@ void main_task(intptr_t unused) {
             .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
 */
-            .composite<BrainTree::ParallelSequence>(1,2)//初期位置調整のために、台上で短距離ライントレース
-                .leaf<IsDistanceEarned>(9999999)
-                .leaf<TraceLine>(0, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
-                //.leaf<RunAsInstructed>(40, 20, 0.0)
-            .end()
+//            .composite<BrainTree::ParallelSequence>(1,2)//初期位置調整のために、台上で短距離ライントレース
+//                .leaf<IsDistanceEarned>(30)
+//                .leaf<TraceLine>(30, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+//                //.leaf<RunAsInstructed>(40, 20, 0.0)
+//            .end()
             .composite<BrainTree::ParallelSequence>(1,2)//第一スラローム開始
-                .leaf<IsDistanceEarned>(100)
+                .leaf<IsDistanceEarned>(150)
                 .leaf<RunAsInstructed>(20, 50, 0.0)
             .end()
             .composite<BrainTree::ParallelSequence>(1,2)
@@ -997,7 +995,7 @@ void main_task(intptr_t unused) {
                 .leaf<RunAsInstructed>(30, 30, 0.0)
             .end()
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsDistanceEarned>(70)
+                .leaf<IsDistanceEarned>(40)
                 .leaf<RunAsInstructed>(40, 15, 0.0)
             .end()
             .composite<BrainTree::ParallelSequence>(1,2)//黒検知したらライントレース
