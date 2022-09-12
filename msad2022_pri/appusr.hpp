@@ -93,7 +93,7 @@ static int _COURSE = 1;
 #define SPEED_SLOW              40
 #endif
 #ifndef P_CONST
-#define P_CONST                 0.75D
+#define P_CONST                 0.60D   //0.75D
 #endif
 #ifndef I_CONST
 #define I_CONST                 0.39D
@@ -102,14 +102,19 @@ static int _COURSE = 1;
 #define D_CONST                 0.08D
 #endif
 
-//define where to jump from caliration:1~10
+//define where to jump from caliration:1~11
 #ifndef JUMP_CALIBRATION
-#define JUMP_CALIBRATION        2
+#define JUMP_CALIBRATION        1
 #endif
 
-//define which pattern to jump from slalom check to slalom second
-#ifndef JUMP_SLALOM
-#define JUMP_SLALOM             false
+//define to use slalom stub or not
+#ifndef JUMP_SLALOM_STUB
+#define JUMP_SLALOM_STUB        true
+#endif
+
+//define which pattern to jump from slalom check to slalom second(A or B)
+#ifndef JUMP_SLALOM_PATTERN
+#define JUMP_SLALOM_PATTERN     false
 #endif
 
 //define where to jump from slalom second to garage:1~7
@@ -154,6 +159,7 @@ enum State {
     ST_INITIAL,
     ST_CALIBRATION,
     ST_RUN,
+    ST_SLALOM_STUB,
     ST_SLALOM_FIRST,
     ST_SLALOM_CHECK,
     ST_SLALOM_SECOND_A,

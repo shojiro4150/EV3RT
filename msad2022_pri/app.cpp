@@ -39,6 +39,7 @@ Plotter*        plotter;
 
 BrainTree::BehaviorTree* tr_calibration = nullptr;
 BrainTree::BehaviorTree* tr_run         = nullptr;
+BrainTree::BehaviorTree* tr_slalom_stub      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_first      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_check      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_second_a      = nullptr;
@@ -175,6 +176,7 @@ public:
 protected:
     int32_t distance;
 };
+//staticメンバ変数の実体定義と初期化
 bool DetectSlalomPattern::isSlalomPatternA = true;
 int32_t DetectSlalomPattern::measuredDistance = 0;
 
@@ -757,6 +759,7 @@ void main_task(intptr_t unused) {
 	    .leaf<IsDistanceEarned>(2000)
         .end()
       .build();
+      tr_slalom_stub = nullptr;
       tr_slalom_first = nullptr;
       tr_slalom_check = nullptr;
       tr_slalom_second_a = nullptr;
@@ -894,19 +897,118 @@ void main_task(intptr_t unused) {
         .end()
     .build();
 
+    //とりあえずライントレースとガレージの間を繋ぐ。
+    //ライントレースのみで進む。ガレージカードは読み取る。ペットボトルは全て倒す。
+    //パターン判断はしない。
+    tr_slalom_stub = (BrainTree::BehaviorTree*) BrainTree::Builder()
+        .composite<BrainTree::MemSequence>()
+            // ライントレースから引継ぎして、直前の青線まで走る
+            //1つ目の青線を抜けるまでは直線
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(1000000)
+                .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .end()
+//
+            //黒線から2つ目の青線までは曲線
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .composite<BrainTree::MemSequence>()
+                    .leaf<IsColorDetected>(CL_BLACK)
+                    .leaf<IsColorDetected>(CL_BLUE)
+                .end()
+                .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .end()
+            //直前までライントレースする
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(300000)
+                .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 1.0, TS_OPPOSITE)
+            .end()
+            //台にのるために十分な勢いで突っ込む
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(1000000)
+                .leaf<RunAsInstructed>(70, 70, 3.0)
+            .end()
+            //壁から50cmの位置に来るまでライントレースのみ実施
+            //ペットボトルのスラロームはしない
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsSonarOn>(500)//超音波センサー＆ライトレースによるチェックポイント
+                .leaf<TraceLine>(50, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)//ガレージカードスラローム開始
+                .leaf<IsDistanceEarned>(90)
+                .leaf<RunAsInstructed>(50, 15, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(80)
+                .leaf<RunAsInstructed>(30, 30, 0.0)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(60)
+                .leaf<RunAsInstructed>(15, 50, 0.0)
+            .end()
+            //色検知
+//
+            .composite<BrainTree::ParallelSequence>(1,2)
+               //.leaf<IsDistanceEarned>(50)
+                .leaf<IsColorDetected>(CL_BLUE_SL)
+                .leaf<IsColorDetected>(CL_RED_SL)
+                .leaf<IsColorDetected>(CL_YELLOW_SL)
+                .leaf<IsColorDetected>(CL_GREEN_SL)
+                .leaf<RunAsInstructed>(30, 30, 0.0)
+            .end()
+            //色を検知したら、90°左旋回して前を向く
+            //move back
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(600000)
+                .leaf<RunAsInstructed>(-40, -40, 3.0)
+            .end()
+            //rotate left with left wheel
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(300000)
+                .leaf<RunAsInstructed>(-40, 0, 0.0) 
+            .end()
+            //move foward
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(400000)
+                .leaf<RunAsInstructed>(50, 50, 0.0)
+            .end()
+            //turn left with right wheel
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(760000)
+                .leaf<RunAsInstructed>(0, 50, 0.0)
+            .end()
+//
+            //超音波センサーでのパターン判断はしない
+            //前を向いたら、黒を検知するまで左に回りながら進む
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsColorDetected>(CL_BLACK)
+                .leaf<RunAsInstructed>(30, 40, 0.0)
+            .end()
+            //黒を検知したらライントレースし、青でガレージに受け渡す
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .composite<BrainTree::MemSequence>()
+                    .leaf<IsColorDetected>(CL_BLACK)
+                    .leaf<IsColorDetected>(CL_BLUE)
+                .end()
+                .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+            .end()                        
+        .end()
+    .build();
+
+//なぜかわからないが、記載コードが多くなるとセグメンテーションフォルトが発生する。コメントアウトすると発生しない。
     tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             // ライントレースから引継ぎして、直前の青線まで走る
             .composite<BrainTree::ParallelSequence>(1,2)
-            .leaf<IsTimeEarned>(1000000)
-            .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+                .leaf<IsTimeEarned>(1000000)
+                .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
+//
             .composite<BrainTree::ParallelSequence>(1,2)
-            .composite<BrainTree::MemSequence>()
-                .leaf<IsColorDetected>(CL_BLACK)
-                .leaf<IsColorDetected>(CL_BLUE)
-            .end()
-            .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
+                .composite<BrainTree::MemSequence>()
+                    .leaf<IsColorDetected>(CL_BLACK)
+                    .leaf<IsColorDetected>(CL_BLUE)
+                .end()
+                .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
             // 台にのる　勢いが必要
             .composite<BrainTree::ParallelSequence>(1,2)
@@ -914,6 +1016,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsTimeEarned>(1500000)
                 .leaf<RunAsInstructed>(70, 70, 0.0)
             .end()
+//
 /*
             // 勢いを殺す
             .composite<BrainTree::MemSequence>()
@@ -929,6 +1032,7 @@ void main_task(intptr_t unused) {
             .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
 */
+/*
             .composite<BrainTree::ParallelSequence>(1,2)//初期位置調整のために、台上で短距離ライントレース
                 .leaf<IsDistanceEarned>(30)
                 .leaf<TraceLine>(30, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
@@ -1004,6 +1108,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_GREEN_SL)
                 .leaf<RunAsInstructed>(30, 30, 0.0)
             .end()
+*/
         .end()
     .build();
     
@@ -1658,6 +1763,7 @@ void main_task(intptr_t unused) {
     delete tr_block_y;
     delete tr_block_d;
     delete tr_run;
+    delete tr_slalom_stub;
     delete tr_slalom_first;
     delete tr_slalom_check;
     delete tr_slalom_second_a;
@@ -1738,42 +1844,46 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
                 switch (JUMP_CALIBRATION) { /* JUMP_CALIBRATION = 1... is for testing only */
                     case 1:
+                        state = ST_SLALOM_STUB;
+                        _log("State changed: ST_CALIBRATION to ST_SLALOM_STUB");
+                        break;
+                    case 2:
                         state = ST_SLALOM_FIRST;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_FIRST");
                         break;
-                    case 2:
+                    case 3:
                         state = ST_SLALOM_CHECK;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_CHECK");
                         break;
-                    case 3:
+                    case 4:
                         state = ST_SLALOM_SECOND_A;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_SECOND_A");
                         break;
-                    case 4:
+                    case 5:
                         state = ST_SLALOM_SECOND_B;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_SECOND_B");
                         break;
-                    case 5:
+                    case 6:
                         state = ST_BLOCK_R;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_R");
                         break;
-                    case 6:
+                    case 7:
                         state = ST_BLOCK_G;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_G");
                         break;
-                    case 7:
+                    case 8:
                         state = ST_BLOCK_B;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_B");
                         break;
-                    case 8:
+                    case 9:
                         state = ST_BLOCK_Y;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_Y");
                         break;
-                    case 9:
+                    case 10:
                         state = ST_BLOCK_D;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
                         break;
-                    case 10:
+                    case 11:
                         state = ST_BLOCK_D2;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_D2");
                         break;
@@ -1796,13 +1906,83 @@ void update_task(intptr_t unused) {
         if (tr_run != nullptr) {
             status = tr_run->update();
             switch (status) {
+                case BrainTree::Node::Status::Success:
+                    if (JUMP_SLALOM_STUB == true) {
+                        state = ST_SLALOM_STUB;
+                        _log("State changed: ST_RUN to ST_SLALOM_STUB");
+                        break;
+                    } else {
+                        state = ST_SLALOM_FIRST;
+                        _log("State changed: ST_RUN to ST_SLALOM_FIRST");
+                        break;
+                    }
+                case BrainTree::Node::Status::Failure:
+                    state = ST_ENDING;
+                    _log("State changed: ST_RUN to ST_ENDING");
+                    break;
+                default:
+                    break;
+            }
+        }
+        break;
+    case ST_SLALOM_STUB:
+        if (tr_slalom_stub != nullptr) {
+            status = tr_slalom_stub->update();
+            switch (status) {
             case BrainTree::Node::Status::Success:
-                state = ST_SLALOM_FIRST;
-                _log("State changed: ST_RUN to ST_SLALOM_FIRST");
+                switch (JUMP_BLOCK) { /* JUMP_BLOCK = 1... is for testing only */
+                    case 1:
+                        state = ST_BLOCK_R;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_R");
+                        break;
+                    case 2:
+                        state = ST_BLOCK_G;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_G");
+                        break;
+                    case 3:
+                        state = ST_BLOCK_B;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_B");
+                        break;
+                    case 4:
+                        state = ST_BLOCK_Y;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_Y");
+                        break;
+                    case 5:
+                        state = ST_BLOCK_D;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_D");
+                        break;
+                    case 6:
+                        state = ST_BLOCK_D2;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_D2");
+                        break;
+                    case 7:
+                        state = ST_ENDING;
+                        _log("State changed: ST_SLALOM_STUB to ST_ENDING");
+                        break;
+                    //go to appropiate garage logic based on color
+                    default:
+                        if (gGarageColor == CL_RED_SL) {
+                            state = ST_BLOCK_R;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_R");
+                        }
+                        if (gGarageColor == CL_GREEN_SL) {
+                            state = ST_BLOCK_G;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_G");
+                        }
+                        if (gGarageColor == CL_BLUE_SL) {
+                            state = ST_BLOCK_B;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_B");
+                        }
+                        if (gGarageColor == CL_YELLOW_SL) {
+                            state = ST_BLOCK_Y;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_Y");
+                        }
+                        break;
+                }
                 break;
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_RUN to ST_ENDING");
+                _log("State changed: ST_SLALOM_STUB to ST_ENDING");
                 break;
             default:
                 break;
@@ -1833,7 +2013,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
                 if (DetectSlalomPattern::isSlalomPatternA == true) {
                     // for test
-                    if (JUMP_SLALOM == true) {
+                    if (JUMP_SLALOM_PATTERN == true) {
                         _log("test only ST_SLALOM_CHECK.");
                         if (DetectSlalomPattern::measuredDistance == 0) {
                             _log("Failed to check slalom pattern.");
@@ -1851,7 +2031,7 @@ void update_task(intptr_t unused) {
                     }
                 } else {
                     // for test
-                    if (JUMP_SLALOM == true) {
+                    if (JUMP_SLALOM_PATTERN == true) {
                         _log("test only ST_SLALOM_CHECK.");
                         state = ST_ENDING;
                         _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::measuredDistance);
