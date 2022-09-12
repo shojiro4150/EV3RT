@@ -932,7 +932,8 @@ tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder()
                 .leaf<IsTimeEarned>(1000000)
                 .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
-            .composite<BrainTree::ParallelSequence>(1,2)
+            .composite<BrainTree::ParallelSequence>(2,3)
+                .leaf<SetArmPosition>(0, 40)
                 .composite<BrainTree::MemSequence>()
                     .leaf<IsColorDetected>(CL_BLACK)
                     .leaf<IsColorDetected>(CL_BLUE)
@@ -945,8 +946,12 @@ tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder()
                 .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)
             .end()
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsDistanceEarned>(180)
-                .leaf<TraceLine>(70, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_CENTER)
+                .leaf<IsTimeEarned>(3000000) //段差ストップ 3.0 sec
+                .leaf<TraceLine>(25, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_CENTER)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(150)
+                .leaf<TraceLine>(80, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_CENTER)
             .end()
 /*// みかのコード
             .composite<BrainTree::ParallelSequence>(1,2)
@@ -1020,7 +1025,7 @@ tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder()
             .end()
             .composite<BrainTree::ParallelSequence>(1,2)//第三スラローム開始 ライントレース
                 //.leaf<IsDistanceEarned>(50)
-                .leaf<IsSonarOn>(500)//超音波センサー＆ライトレースによるチェックポイント
+                .leaf<IsSonarOn>(450)//超音波センサー＆ライトレースによるチェックポイント
                 .leaf<TraceLine>(30, 47, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
             .end()
             .composite<BrainTree::ParallelSequence>(1,2)//ガレージカードスラローム開始
@@ -1753,8 +1758,8 @@ void update_task(intptr_t unused) {
     int32_t sonarDistance = sonarSensor->getDistance();
     int32_t gyroAcceleration = gyroSensor->getAnglerVelocity();
 
-    _log("red=%03d,green=%03d,blue=%03d,dist=%05d,azi=%03d,deg=%03d,locX=%05d,locY=%05d,ang=%03d,angR=%03d,sonar=%04d,gyro=%03d",
-            cur_rgb.r,cur_rgb.g,cur_rgb.b,distance,azimuth,degree,locX,locY,ang,angR,sonarDistance,gyroAcceleration);
+//    _log("red=%03d,green=%03d,blue=%03d,dist=%05d,azi=%03d,deg=%03d,locX=%05d,locY=%05d,ang=%03d,angR=%03d,sonar=%04d,gyro=%03d",
+//            cur_rgb.r,cur_rgb.g,cur_rgb.b,distance,azimuth,degree,locX,locY,ang,angR,sonarDistance,gyroAcceleration);
     
 /*
     === STATE MACHINE DEFINITION STARTS HERE ===
