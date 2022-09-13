@@ -1446,7 +1446,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)   
                 .leaf<IsTimeEarned>(690000) 
                 .leaf<RunAsInstructed>(30,
-                                       80,0.0) 
+                                       75,0.0) 
                 .leaf<IsColorDetected>(CL_RED)   
             .end()
             .composite<BrainTree::ParallelSequence>(1,3) 
