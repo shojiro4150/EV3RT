@@ -95,6 +95,9 @@ static int _COURSE = 1;
 #ifndef SPEED_NORM
 #define SPEED_NORM              45  /* was 50 for 2020 program                 */
 #endif
+#ifndef SPEED_SLOW
+#define SPEED_SLOW              40
+#endif
 #ifndef P_CONST
 #define P_CONST                 0.75D
 #endif
@@ -105,8 +108,16 @@ static int _COURSE = 1;
 #define D_CONST                 0.08D
 #endif
 
-#ifndef JUMP
-#define JUMP                    0
+#ifndef JUMP_CALIBRATION
+#define JUMP_CALIBRATION        0
+#endif
+
+#ifndef JUMP_SLALOM
+#define JUMP_SLALOM             false
+#endif
+
+#ifndef JUMP_BLOCK
+#define JUMP_BLOCK              0
 #endif
 
 #ifndef LOG_INTERVAL
@@ -148,7 +159,16 @@ enum State {
     ST_INITIAL,
     ST_CALIBRATION,
     ST_RUN,
-    ST_BLOCK,
+    ST_SLALOM_FIRST,
+    ST_SLALOM_CHECK,
+    ST_SLALOM_SECOND_A,
+    ST_SLALOM_SECOND_B,
+    ST_BLOCK_R,
+    ST_BLOCK_G,
+    ST_BLOCK_B,
+    ST_BLOCK_Y,
+    ST_BLOCK_D,
+    ST_BLOCK_D2,
     ST_ENDING,
     ST_END,
 };
