@@ -1402,7 +1402,7 @@ void main_task(intptr_t unused) {
                                        46,0.0)   //グレー検知後、丸穴あき部分があるため少し前進    
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(1000000)  // 本線ラインに戻ってくる
+                .leaf<IsTimeEarned>(1100000)  // 本線ラインに戻ってくる
                 .leaf<RunAsInstructed>(75,
                                        40,0.0)          
             .end()
