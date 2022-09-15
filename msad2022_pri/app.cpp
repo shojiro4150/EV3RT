@@ -1378,7 +1378,7 @@ void main_task(intptr_t unused) {
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(900000) // 黒線検知後、ライントレース準備
                 .leaf<RunAsInstructed>(-30,
-                                       50,
+                                       55,
                                        0.0)     
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
