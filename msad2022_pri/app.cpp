@@ -1770,7 +1770,7 @@ void main_task(intptr_t unused) {
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
                 .leaf<IsTimeEarned>(890000) //青検知後、大きく右旋回。向きを整える。
-                .leaf<RunAsInstructed>(55,
+                .leaf<RunAsInstructed>(50,
                                        -50,0.0)         
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
