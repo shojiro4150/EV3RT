@@ -774,7 +774,8 @@ void main_task(intptr_t unused) {
                 .composite<BrainTree::ParallelSequence>(1,2)
                  //.leaf<IsTimeEarned>(18000000)//18秒
                  //.leaf<StopNow>()
-                   .leaf<IsTimeEarned>(prof->getValueAsNum("TIME1a"))
+                   //.leaf<IsTimeEarned>(prof->getValueAsNum("TIME1a"))
+                   .leaf<IsDistanceEarned>(prof->getValueAsNum("DIST1a"))
                    .leaf<RunAsInstructed>(prof->getValueAsNum("POWER_L1a"),
                    prof->getValueAsNum("POWER_R1a"), 0.0)
                 .end()
