@@ -1,6 +1,5 @@
 #define TR_RUN_COLOR_R \
 
-
 #define TR_RUN_COLOR_L \
     .composite<BrainTree::ParallelSequence>(2,3) \
         .leaf<IsTouchOn>() \
