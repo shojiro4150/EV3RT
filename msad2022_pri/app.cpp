@@ -1036,10 +1036,10 @@ void main_task(intptr_t unused) {
     FOR THE RIGHT AND LEFT COURSE SEPARATELY
 
     if (prof->getValueAsStr("COURSE") == "R") {
-      tr_run   = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_R   .build();
+      tr_run   = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_CAMERA_R   .build();
       tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_R .build();
     } else {
-      tr_run   = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_L   .build();
+      tr_run   = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_CAMERA_L   .build();
       tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_L .build();
     }
 */ 
@@ -1291,7 +1291,22 @@ void main_task(intptr_t unused) {
       tr_block_d     = nullptr;
 
     } else { /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
+
+/*
+    DEFINE ROBOT BEHAVIOR AFTER START
+    FOR THE RIGHT AND LEFT COURSE SEPARATELY
+
+    if (prof->getValueAsStr("COURSE") == "R") {
+      tr_run   = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_CAMERA_R   .build();
+      tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_R .build();
+    } else {
+      tr_run   = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_COLOR_L   .build();
+      tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_L .build();
+    }
+*/
+
     tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder()
+//
         .composite<BrainTree::ParallelSequence>(2,3)
             .leaf<IsTouchOn>()
             .leaf<SetArmPosition>(0, 40) 

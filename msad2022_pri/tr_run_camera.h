@@ -1,4 +1,4 @@
-#define TR_RUN_R \
+#define TR_RUN_CAMERA_R \
   /* RUN: a regression test case to ensure sensor trace works */	\
   .composite<BrainTree::MemSequence>()			\
     .composite<BrainTree::ParallelSequence>(1,2) \
@@ -12,7 +12,7 @@
     .end()								\
   .end()
 
-#define TR_RUN_L \
+#define TR_RUN_CAMERA_L \
   /* RUN: until detecting BLUE while executing MemSequence in parallel */	\
   .composite<BrainTree::ParallelSequence>(1,2)				\
     .leaf<IsDistanceEarned>(prof->getValueAsNum("RUNx_DIST")) /* temp stopper */ \
