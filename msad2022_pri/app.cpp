@@ -745,7 +745,7 @@ void main_task(intptr_t unused) {
     tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::ParallelSequence>(2,3)
             .leaf<IsTouchOn>()
-            .leaf<SetArmPosition>(0, 40) 
+            .leaf<SetArmPosition>(10, 40) 
             .composite<BrainTree::MemSequence>()
     //GATE1を通過後ラインの交差地点地点直前まで
                 .leaf<IsBackOn>()
