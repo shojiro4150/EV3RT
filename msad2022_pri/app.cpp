@@ -1769,7 +1769,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_BLUE2)  //前進。次の青検知を目指す。
             .end()
             .composite<BrainTree::ParallelSequence>(1,3)
-                .leaf<IsTimeEarned>(800000) //青検知後、大きく右旋回。向きを整える。
+                .leaf<IsTimeEarned>(775000) //青検知後、大きく右旋回。向きを整える。
                 .leaf<RunAsInstructed>(50,
                                        -50,0.0)         
             .end()
