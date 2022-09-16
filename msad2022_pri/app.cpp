@@ -1570,7 +1570,7 @@ void main_task(intptr_t unused) {
                 .leaf<IsColorDetected>(CL_GREEN)  
             .end()
             .leaf<StopNow>()
-            .leaf<IsTimeEarned>(3000000) // wait 3 seconds
+            .leaf<IsTimeEarned>(30000000) // wait 3 seconds
             .leaf<SetArmPosition>(10, 40)
         .end()
         .build();
