@@ -43,7 +43,7 @@
         .end()\
         /*スタブ用回転*/\
         .composite<BrainTree::ParallelSequence>(1,2) \
-            .leaf<IsTimeEarned>(700000) \
+            .leaf<IsTimeEarned>(650000) \
             .leaf<RunAsInstructed>(-50, 50, 0.0)\
         .end()  \
         /*スタブ用黒検知したらライントレース*/\
