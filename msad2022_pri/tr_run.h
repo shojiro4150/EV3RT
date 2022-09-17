@@ -83,7 +83,7 @@
       .end()		      	\
         .composite<BrainTree::ParallelSequence>(1,2)								\
             .leaf<IsTimeEarned>(prof->getValueAsNum("RUN7_TIME"))								\
-            .leaf<RunAsInstructed>(55, -55, 0.0)								\
+            .leaf<RunAsInstructed>(50, -50, 0.0)								\
         .end()  \
       .end()								  \
     .end()     								\
