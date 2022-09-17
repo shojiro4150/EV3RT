@@ -62,7 +62,7 @@ void Plotter::plot() {
     prevAngL = curAngL;
     prevAngR = curAngR;
     /* calculate azimuth */
-    double deltaAzi = (deltaDistL - deltaDistR) / WHEEL_TREAD;
+    double deltaAzi = atan((deltaDistL - deltaDistR) / WHEEL_TREAD);
     azimuth += deltaAzi;
     if (azimuth > M_TWOPI) {
         azimuth -= M_TWOPI;

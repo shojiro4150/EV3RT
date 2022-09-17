@@ -6,6 +6,7 @@
 #include "BrainTree.h"
 #include "Profile.hpp"
 #include "Video.hpp"
+
 /*
     BrainTree.h must present before ev3api.h on RasPike environment.
     Note that ev3api.h is included by app.h.
@@ -58,6 +59,7 @@ Video*          video;
 
 BrainTree::BehaviorTree* tr_calibration = nullptr;
 BrainTree::BehaviorTree* tr_run         = nullptr;
+BrainTree::BehaviorTree* tr_slalom_stub      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_first      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_check      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_second_a      = nullptr;
@@ -202,18 +204,18 @@ protected:
 class DetectSlalomPattern : public BrainTree::Node {
 public:
     static bool isSlalomPatternA;
-    static int32_t earnedDistance;
+    static int32_t measuredDistance;
     DetectSlalomPattern() {}
     Status update() override {
         distance = 10 * (sonarSensor->getDistance());
         _log("sonar recieved distance: %d", distance);
         if (0 < distance && distance <= 250) {
             isSlalomPatternA = true;
-            earnedDistance = distance;
+            measuredDistance = distance;
             return Status::Success;
         } else if (300 < distance && distance < 400) {
             isSlalomPatternA = false;
-            earnedDistance = distance;
+            measuredDistance = distance;
             return Status::Success;
         } else {
             return Status::Running;
@@ -222,8 +224,9 @@ public:
 protected:
     int32_t distance;
 };
+//staticメンバ変数の実体定義と初期化
 bool DetectSlalomPattern::isSlalomPatternA = true;
-int32_t DetectSlalomPattern::earnedDistance = 0;
+int32_t DetectSlalomPattern::measuredDistance = 0;
 
 /*
     usage:
@@ -345,7 +348,6 @@ protected:
 */
 class IsColorDetected : public BrainTree::Node {
 public:
-    static Color garageColor;
     IsColorDetected(Color c) : color(c) {
         updated = false;
     }
@@ -382,9 +384,10 @@ public:
                     return Status::Success;
                 }
                 break;
+            //for garage card
             case CL_BLUE_SL:
                 if (cur_rgb.b - cur_rgb.r > 20 && cur_rgb.g <= 100 && cur_rgb.b <= 120) {
-                    garageColor = CL_BLUE_SL;
+                    gGarageColor = CL_BLUE_SL;
                     _log("ODO=%05d, CL_BLUE_SL detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -409,9 +412,10 @@ public:
                     return Status::Success;
                 }
                 break;
+            //for garage card
             case CL_RED_SL:
                 if (cur_rgb.r - cur_rgb.b >= 25 && cur_rgb.r > 85 && cur_rgb.g < 60) {
-                    garageColor = CL_RED_SL;
+                    gGarageColor = CL_RED_SL;
                     _log("ODO=%05d, CL_RED_SL detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -422,9 +426,10 @@ public:
                     return Status::Success;
                 }
                 break;
+            //for garage card
             case CL_YELLOW_SL:
                 if (cur_rgb.r >= 110 &&  cur_rgb.g >= 90 && cur_rgb.b >= 50 && cur_rgb.b <= 120 ) {
-                    garageColor = CL_YELLOW_SL;
+                    gGarageColor = CL_YELLOW_SL;
                     _log("ODO=%05d, CL_YELLOW_SL detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -435,9 +440,10 @@ public:
                     return Status::Success;
                 }
                 break;
+            //for garage card
             case CL_GREEN_SL:
                 if (cur_rgb.b - cur_rgb.r < 30 && cur_rgb.g >= 30 && cur_rgb.b <= 80) {
-                    garageColor = CL_GREEN_SL;
+                    gGarageColor = CL_GREEN_SL;
                     _log("ODO=%05d, CL_GREEN_SL detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -463,7 +469,6 @@ protected:
     Color color;
     bool updated;
 };
-Color IsColorDetected::garageColor = CL_BLUE_SL;    // define default color as blue
 
 /*
     usage:
@@ -787,7 +792,10 @@ class ClimbBoard : public BrainTree::Node {
 public:
     ClimbBoard(int direction, int count) : dir(direction), cnt(count) {}
     Status update() override {
-        curAngle = gyroSensor->getAngle();
+        // スピード70で走る
+        // 1　仰角の加速度が＋**°/10msecになったことを検知する
+        // 2　仰角の加速度が-**°/10msecになったことを検知する
+        gyroAcceleration = gyroSensor->getAnglerVelocity();
             if (cnt >= 1) {
                 leftMotor->setPWM(0);
                 rightMotor->setPWM(0);
@@ -801,10 +809,10 @@ public:
                 armMotor->setPWM(30);
                 leftMotor->setPWM(23);
                 rightMotor->setPWM(23);
-                if (curAngle < -9) {
-                    prevAngle = curAngle;
+                if (gyroAcceleration < -9) {
+                    prevAngle = gyroAcceleration;
                 }
-                if (prevAngle < -9 && curAngle >= 0) {
+                if (prevAngle < -9 && gyroAcceleration >= 0) {
                     ++cnt;
                     _log("ON BOARD");
                 }
@@ -814,7 +822,8 @@ public:
 private:
     int8_t dir;
     int cnt;
-    int32_t curAngle;
+    //int32_t curAngle;
+    int32_t gyroAcceleration;
     int32_t prevAngle;
 };
 
@@ -1031,6 +1040,8 @@ void main_task(intptr_t unused) {
     rightMotor->setPWM(0);
     armMotor->reset();
 
+    _log("before behavier tree.");
+
 /*
     === BEHAVIOR TREE DEFINITION STARTS HERE ===
     A Behavior Tree serves as a blueprint for a LEGO object
@@ -1108,6 +1119,8 @@ void main_task(intptr_t unused) {
     _log("starting update task...");
     sta_cyc(CYC_UPD_TSK);
 
+    _log("after cyclic task.");
+
     /* indicate initialization completion by LED color */
     _log("initialization completed.");
     state = ST_CALIBRATION;
@@ -1139,6 +1152,10 @@ void main_task(intptr_t unused) {
     for (auto& t : thds) {
       t.join();
     }
+//    stp_cyc(CYC_VIDEO_TSK);
+    _log("wait for update task to cease, going to sleep 3 secs");
+    ev3clock->sleep(3000000);
+    _log("wait finished");
 
     /* destroy behavior tree */
     delete tr_block_d2;
@@ -1169,6 +1186,7 @@ void main_task(intptr_t unused) {
     delete sonarSensor;
     delete touchSensor;
     delete video;
+    delete ev3clock;
     _log("being terminated...");
     delete ev3clock;
     // temp fix 2022/6/20 W.Taniguchi, as Bluetooth not implemented yet
@@ -1179,6 +1197,16 @@ void main_task(intptr_t unused) {
     ext_tsk();
 }
 
+/* periodic task to handle video */
+/*
+void video_task(intptr_t unused) {
+    ER ercd;
+    video->capture();
+    video->writeFrame(video->readFrame());    
+    video->show();
+}
+*/
+    
 /* periodic task to update the behavior tree */
 void update_task(intptr_t unused) {
     BrainTree::Node::Status status;
@@ -1208,13 +1236,13 @@ void update_task(intptr_t unused) {
     int32_t angR = plotter->getAngR();
 
     int32_t sonarDistance = sonarSensor->getDistance();
-    int32_t curAngle = gyroSensor->getAngle();
-    int32_t angleSpeed = gyroSensor->getAnglerVelocity();
+    int32_t gyroAcceleration = gyroSensor->getAnglerVelocity();
 
-    _log("r=%d g=%d b=%d",cur_rgb.r,cur_rgb.g,cur_rgb.b);
+    _log("red=%03d,green=%03d,blue=%03d,dist=%05d,azi=%03d,deg=%03d,locX=%05d,locY=%05d,ang=%03d,angR=%03d,sonar=%04d,gyro=%03d",
+            cur_rgb.r,cur_rgb.g,cur_rgb.b,distance,azimuth,degree,locX,locY,ang,angR,sonarDistance,gyroAcceleration);
 
-    _log("dist=%d azi=%d deg=%d locX=%d locY=%d ang=%d angR=%d curAngle=%03d angleSpeed=%03d",distance,azimuth,degree,locX,locY,ang,angR,curAngle,angleSpeed);
-    _log("sonar=%d",sonarDistance);
+//    int32_t curAngle = gyroSensor->getAngle();
+//    _log("angleSpeed=%03d",angleSpeed);
 
 /*
     === STATE MACHINE DEFINITION STARTS HERE ===
@@ -1230,18 +1258,22 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
                 switch (JUMP_CALIBRATION) { /* JUMP_CALIBRATION = 1... is for testing only */
                     case 1:
+                        state = ST_SLALOM_STUB;
+                        _log("State changed: ST_CALIBRATION to ST_SLALOM_STUB");
+                        break;
+                    case 2:
                         state = ST_SLALOM_FIRST;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_FIRST");
                         break;
-                    case 2:
+                    case 3:
                         state = ST_SLALOM_CHECK;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_CHECK");
                         break;
-                    case 3:
+                    case 4:
                         state = ST_SLALOM_SECOND_A;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_SECOND_A");
                         break;
-                    case 4:
+                    case 5:
                         state = ST_SLALOM_SECOND_B;
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_SECOND_B");
                         break;
@@ -1271,7 +1303,7 @@ void update_task(intptr_t unused) {
                         break;
                     case 11:
                         state = ST_BLOCK_D2;
-                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK_D2");
                         break;
                     default:
                         state = ST_RUN;
@@ -1292,13 +1324,83 @@ void update_task(intptr_t unused) {
         if (tr_run != nullptr) {
             status = tr_run->update();
             switch (status) {
+                case BrainTree::Node::Status::Success:
+                    if (JUMP_SLALOM_STUB == true) {
+                        state = ST_SLALOM_STUB;
+                        _log("State changed: ST_RUN to ST_SLALOM_STUB");
+                        break;
+                    } else {
+                        state = ST_SLALOM_FIRST;
+                        _log("State changed: ST_RUN to ST_SLALOM_FIRST");
+                        break;
+                    }
+                case BrainTree::Node::Status::Failure:
+                    state = ST_ENDING;
+                    _log("State changed: ST_RUN to ST_ENDING");
+                    break;
+                default:
+                    break;
+            }
+        }
+        break;
+    case ST_SLALOM_STUB:
+        if (tr_slalom_stub != nullptr) {
+            status = tr_slalom_stub->update();
+            switch (status) {
             case BrainTree::Node::Status::Success:
-                state = ST_SLALOM_FIRST;
-                _log("State changed: ST_RUN to ST_SLALOM_FIRST");
+                switch (JUMP_BLOCK) { /* JUMP_BLOCK = 1... is for testing only */
+                    case 1:
+                        state = ST_BLOCK_R;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_R");
+                        break;
+                    case 2:
+                        state = ST_BLOCK_G;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_G");
+                        break;
+                    case 3:
+                        state = ST_BLOCK_B;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_B");
+                        break;
+                    case 4:
+                        state = ST_BLOCK_Y;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_Y");
+                        break;
+                    case 5:
+                        state = ST_BLOCK_D;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_D");
+                        break;
+                    case 6:
+                        state = ST_BLOCK_D2;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_D2");
+                        break;
+                    case 7:
+                        state = ST_ENDING;
+                        _log("State changed: ST_SLALOM_STUB to ST_ENDING");
+                        break;
+                    //go to appropiate garage logic based on color
+                    default:
+                        if (gGarageColor == CL_RED_SL) {
+                            state = ST_BLOCK_R;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_R");
+                        }
+                        if (gGarageColor == CL_GREEN_SL) {
+                            state = ST_BLOCK_G;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_G");
+                        }
+                        if (gGarageColor == CL_BLUE_SL) {
+                            state = ST_BLOCK_B;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_B");
+                        }
+                        if (gGarageColor == CL_YELLOW_SL) {
+                            state = ST_BLOCK_Y;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_Y");
+                        }
+                        break;
+                }
                 break;
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_RUN to ST_ENDING");
+                _log("State changed: ST_SLALOM_STUB to ST_ENDING");
                 break;
             default:
                 break;
@@ -1329,32 +1431,32 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
                 if (DetectSlalomPattern::isSlalomPatternA == true) {
                     // for test
-                    if (JUMP_SLALOM == true) {
+                    if (JUMP_SLALOM_PATTERN == true) {
                         _log("test only ST_SLALOM_CHECK.");
-                        if (DetectSlalomPattern::earnedDistance == 0) {
+                        if (DetectSlalomPattern::measuredDistance == 0) {
                             _log("Failed to check slalom pattern.");
                         }
                             state = ST_ENDING;
-                            _log("Distance %d is detected by sonar and chose pattern A.", DetectSlalomPattern::earnedDistance);
+                            _log("Distance %d is detected by sonar and chose pattern A.", DetectSlalomPattern::measuredDistance);
                             _log("State changed: ST_SLALOM_CHECK to ST_ENDING");
                     } else {
-                        if (DetectSlalomPattern::earnedDistance == 0) {
+                        if (DetectSlalomPattern::measuredDistance == 0) {
                             _log("Failed to check slalom pattern.");
                         }
                         state = ST_SLALOM_SECOND_A;
-                        _log("Distance %d is detected by sonar and chose pattern A.", DetectSlalomPattern::earnedDistance);
+                        _log("Distance %d is detected by sonar and chose pattern A.", DetectSlalomPattern::measuredDistance);
                         _log("State changed: ST_SLALOM_CHECK to ST_SLALOM_SECOND_A");
                     }
                 } else {
                     // for test
-                    if (JUMP_SLALOM == true) {
+                    if (JUMP_SLALOM_PATTERN == true) {
                         _log("test only ST_SLALOM_CHECK.");
                         state = ST_ENDING;
-                        _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::earnedDistance);
+                        _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::measuredDistance);
                         _log("State changed: ST_SLALOM_CHECK to ST_ENDING");
                     } else {
                         state = ST_SLALOM_SECOND_B;
-                        _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::earnedDistance);
+                        _log("Distance %d is detected by sonar and chose pattern B.", DetectSlalomPattern::measuredDistance);
                         _log("State changed: ST_SLALOM_CHECK to ST_SLALOM_SECOND_B");
                     }
                 }
@@ -1391,12 +1493,35 @@ void update_task(intptr_t unused) {
                         _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_Y");
                         break;
                     case 5:
+                        state = ST_BLOCK_D;
+                        _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_D");
+                        break;
+                    case 6:
+                        state = ST_BLOCK_D2;
+                        _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_D2");
+                        break;
+                    case 7:
                         state = ST_ENDING;
                         _log("State changed: ST_SLALOM_SECOND_A to ST_ENDING");
                         break;
+                    //go to appropiate garage logic based on color
                     default:
-                        state = ST_BLOCK_D;
-                        _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_D");
+                        if (gGarageColor == CL_RED_SL) {
+                            state = ST_BLOCK_R;
+                            _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_R");
+                        }
+                        if (gGarageColor == CL_GREEN_SL) {
+                            state = ST_BLOCK_G;
+                            _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_G");
+                        }
+                        if (gGarageColor == CL_BLUE_SL) {
+                            state = ST_BLOCK_B;
+                            _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_B");
+                        }
+                        if (gGarageColor == CL_YELLOW_SL) {
+                            state = ST_BLOCK_Y;
+                            _log("State changed: ST_SLALOM_SECOND_A to ST_BLOCK_Y");
+                        }
                         break;
                 }
                 break;
@@ -1432,12 +1557,35 @@ void update_task(intptr_t unused) {
                         _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_Y");
                         break;
                     case 5:
+                        state = ST_BLOCK_D;
+                        _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_D");
+                        break;
+                    case 6:
+                        state = ST_BLOCK_D2;
+                        _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_D2");
+                        break;
+                    case 7:
                         state = ST_ENDING;
                         _log("State changed: ST_SLALOM_SECOND_B to ST_ENDING");
                         break;
+                    //go to appropiate garage logic based on color
                     default:
-                        state = ST_BLOCK_D;
-                        _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_D");
+                        if (gGarageColor == CL_RED_SL) {
+                            state = ST_BLOCK_R;
+                            _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_R");
+                        }
+                        if (gGarageColor == CL_GREEN_SL) {
+                            state = ST_BLOCK_G;
+                            _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_G");
+                        }
+                        if (gGarageColor == CL_BLUE_SL) {
+                            state = ST_BLOCK_B;
+                            _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_B");
+                        }
+                        if (gGarageColor == CL_YELLOW_SL) {
+                            state = ST_BLOCK_Y;
+                            _log("State changed: ST_SLALOM_SECOND_B to ST_BLOCK_Y");
+                        }
                         break;
                 }
                 break;
@@ -1545,6 +1693,7 @@ void update_task(intptr_t unused) {
         _log("State changed: ST_ENDING to ST_END");
         break;
     case ST_INITIAL:    /* do nothing */
+        _log("entered state machine");
     case ST_END:        /* do nothing */
     default:            /* do nothing */
         break;
