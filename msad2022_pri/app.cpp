@@ -935,8 +935,8 @@ void main_task(intptr_t unused) {
 
     if (prof->getValueAsStr("COURSE") == "R") {
       tr_run   = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_L.build();
-      tr_slalom = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_R.build();
-      tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G_R.build();
+      tr_slalom = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_L.build();
+      tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G_L.build();
     } else {
       tr_run   = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_L.build();
       tr_slalom = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_L.build();
