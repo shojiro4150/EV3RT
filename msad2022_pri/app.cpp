@@ -1003,7 +1003,7 @@ void main_task(intptr_t unused) {
 
     if (prof->getValueAsStr("COURSE") == "R") {
         // Rコースはライントレース前進走行
-        tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_COLOR .build();
+        tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN .build();
         tr_slalom = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_R .build();
         tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G_R .build();
     } else {
