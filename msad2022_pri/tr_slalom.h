@@ -14,23 +14,23 @@
                 .leaf<IsColorDetected>(CL_BLACK)\
                 .leaf<IsColorDetected>(CL_BLUE)\
             .end()\
-            .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, 0.04D, 0.0, TS_OPPOSITE)\
+            .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, 0.08D, 0.0, TS_OPPOSITE)\
         .end()\
         /*台にのる　勢いが必要*/\
         /*青検知の後、台乗上前にギリギリまでトレース*/\
         .composite<BrainTree::ParallelSequence>(1,2)\
             .leaf<IsDistanceEarned>(360)\
-            .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, 0.04D, 0.0, TS_OPPOSITE)\
+            .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, 0.08D, 0.0, TS_OPPOSITE)\
         .end()\
         .composite<BrainTree::ParallelSequence>(1,2)\
         /*段差ストップ 3.0 sec*/\
             .leaf<IsTimeEarned>(1000000) \
-            .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, 0.04D, 0.0, TS_OPPOSITE)\
+            .leaf<TraceLine>(35, GS_TARGET, P_CONST, I_CONST, 0.08D, 0.0, TS_OPPOSITE)\
         .end()\
         /*遠藤追加（疑似台形駆動）*/\
         .composite<BrainTree::ParallelSequence>(1,2) \
             .leaf<IsTimeEarned>(3000000) \
-            .leaf<TraceLine>(25, GS_TARGET, P_CONST, I_CONST, 0.04D, 0.0, TS_OPPOSITE)\
+            .leaf<TraceLine>(25, GS_TARGET, P_CONST, I_CONST, 0.08D, 0.0, TS_OPPOSITE)\
         .end()\
         .composite<BrainTree::ParallelSequence>(1,2)\
             .leaf<IsDistanceEarned>(150)\
