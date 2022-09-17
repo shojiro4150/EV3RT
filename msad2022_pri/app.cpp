@@ -1030,7 +1030,8 @@ void main_task(intptr_t unused) {
     if (prof->getValueAsStr("COURSE") == "R") {
         // Rコースはカメラで後進走行
         tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_CAMERA_R .build();
-        //tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_COLOR_R .build();
+        // カラーセンサーの場合は、モータパワー反転で対応できるから、左と同じコードで問題ない
+        //tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_COLOR_L .build();
         tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_FIRST_R .build();
         tr_slalom_check = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_CHECK_R .build();
         tr_slalom_second_a = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_A_R .build();
