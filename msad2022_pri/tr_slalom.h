@@ -38,7 +38,7 @@
         .end()\
         /*スタブ用ライントレース１*/\
         .composite<BrainTree::ParallelSequence>(1,2)\
-            .leaf<IsDistanceEarned>(1100)\
+            .leaf<IsDistanceEarned>(1150)\
             .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)\
         .end()\
         /*スタブ用回転*/\
