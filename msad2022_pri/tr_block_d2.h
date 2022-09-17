@@ -1,8 +1,6 @@
-/* Rコースのガレージダミー2 */
-#define TR_BLOCK_D2_R \
-
-/* Lコースのガレージダミー2 */
-#define TR_BLOCK_D2_L \
+/* ガレージダミー */
+/* ガレージは左右で違いなし。モーター左右反転で対応可能 */
+#define TR_BLOCK_D2 \
     .composite<BrainTree::MemSequence>() \
         .composite<BrainTree::ParallelSequence>(1,3) \
             .leaf<SetArmPosition>(10, 40) \

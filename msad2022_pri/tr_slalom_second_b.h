@@ -1,8 +1,6 @@
-/* Rコースのスラローム後半B */
-#define TR_SLALOM_SECOND_B_R \
-
-/* Lコースのスラローム後半B */
-#define TR_SLALOM_SECOND_B_L \
+/* スラローム後半B */
+/* スラローム後半Bは左右で違いなし。モーター左右反転で対応可能 */
+#define TR_SLALOM_SECOND_B \
     .composite<BrainTree::MemSequence>() \
     /* 後半第一スラローム開始 */ \
         .composite<BrainTree::ParallelSequence>(1,2)  \

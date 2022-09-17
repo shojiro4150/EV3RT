@@ -1,6 +1,6 @@
-#define TR_RUN_COLOR_R \
-
-#define TR_RUN_COLOR_L \
+/* ライントレース（カラーセンサー） */
+/* カラーセンサーは左右で違いなし。モーター左右反転で対応可能 */
+#define TR_RUN_COLOR \
     .composite<BrainTree::ParallelSequence>(2,3) \
         .leaf<IsTouchOn>() \
         .leaf<SetArmPosition>(0, 40) \

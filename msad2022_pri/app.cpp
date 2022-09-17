@@ -23,9 +23,19 @@
 
 /* behavior tree stanza files */
 #include "tr_calibration.h"
-#include "tr_run.h"
-#include "tr_slalom.h"
+#include "tr_run_camera.h"
+#include "tr_run_color.h"
+#include "tr_slalom_first.h"
+#include "tr_slalom_check.h"
+#include "tr_slalom_second_a.h"
+#include "tr_slalom_second_b.h"
+#include "tr_slalom_stub.h"
+#include "tr_block_r.h"
 #include "tr_block_g.h"
+#include "tr_block_b.h"
+#include "tr_block_y.h"
+#include "tr_block_d.h"
+#include "tr_block_d2.h"
 
 /* this is to avoid linker error, undefined reference to `__sync_synchronize' */
 extern "C" void __sync_synchronize() {}
@@ -1039,38 +1049,38 @@ void main_task(intptr_t unused) {
     if (prof->getValueAsStr("COURSE") == "R") {
         // Rコースはカメラで後進走行
         tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_CAMERA_R .build();
-        // カラーセンサーの場合は、モータパワー反転で対応できるから、左と同じコードで問題ない
-        //tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_COLOR_L .build();
-        tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_FIRST_R .build();
-        tr_slalom_check = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_CHECK_R .build();
-        tr_slalom_second_a = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_A_R .build();
-        tr_slalom_second_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_B_R .build();
-        tr_slalom_stub = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_STUB_R.build();
-        tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_R_R .build();
-        tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G_R .build();
-        tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_B_R .build();
-        tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_Y_R .build();
-        // テストでの値取得用
-        tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_D_R .build();
-        tr_block_d2 = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_D2_R .build();
+        //tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_COLOR .build();
+        tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_FIRST .build();
+        tr_slalom_check = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_CHECK .build();
+        tr_slalom_second_a = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_A .build();
+        tr_slalom_second_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_B .build();
+        tr_slalom_stub = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_STUB .build();
+        tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_R .build();
+        tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G .build();
+        tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_B .build();
+        tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_Y .build();
+        // ガレージテストでの値取得用
+        tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_D .build();
+        tr_block_d2 = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_D2 .build();
 
     /* BEHAVIOR FOR THE LEFT COURSE STARTS HERE */
+    /* モータパワー反転で対応できるから、基本は右と同じコードで問題ない */
     } else {
         //tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_CAMERA_L .build();
         // Lコースはカラーセンサーで前進走行
-        tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_COLOR_L .build();
-        tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_FIRST_L .build();
-        tr_slalom_check = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_CHECK_L .build();
-        tr_slalom_second_a = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_A_L .build();
-        tr_slalom_second_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_B_L .build();
-        tr_slalom_stub = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_STUB_L.build();
-        tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_R_L .build();
-        tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G_L .build();
-        tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_B_L .build();
-        tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_Y_L .build();
-        // テストでの値取得用
-        tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_D_L .build();
-        tr_block_d2 = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_D2_L .build();
+        tr_run = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_RUN_COLOR .build();
+        tr_slalom_first = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_FIRST .build();
+        tr_slalom_check = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_CHECK .build();
+        tr_slalom_second_a = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_A .build();
+        tr_slalom_second_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_B .build();
+        tr_slalom_stub = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_STUB .build();
+        tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_R .build();
+        tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G .build();
+        tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_B .build();
+        tr_block_y = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_Y .build();
+        // ガレージテストでの値取得用
+        tr_block_d = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_D .build();
+        tr_block_d2 = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_D2 .build();
     }
 
     /* start sub-threads not managed by ASP */

@@ -1,8 +1,6 @@
-/* Rコースのスラローム転回 */
-#define TR_SLALOM_CHECK_R \
-
-/* Lコースのスラローム転回 */
-#define TR_SLALOM_CHECK_L \
+/* スラローム転回 */
+/* スラローム転回は左右で違いなし。モーター左右反転で対応可能 */
+#define TR_SLALOM_CHECK \
     /* 台上転回後、センサーでコースパターン判定 */ \
     .composite<BrainTree::MemSequence>() \
         /* 色検知 for test */ \

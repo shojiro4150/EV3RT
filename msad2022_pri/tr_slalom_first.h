@@ -1,8 +1,6 @@
-/* Rコースのスラローム前半 */
-#define TR_SLALOM_FIRST_R \
-
-/* Lコースのスラローム後半 */
-#define TR_SLALOM_FIRST_L \
+/* スラローム前半 */
+/* スラローム前半は左右で違いなし。モーター左右反転で対応可能 */
+#define TR_SLALOM_FIRST \
     .composite<BrainTree::MemSequence>() \
         /* ライントレースから引継ぎして、直前の青線まで走る */ \
         .composite<BrainTree::ParallelSequence>(1,2) \

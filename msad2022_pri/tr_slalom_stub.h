@@ -1,7 +1,6 @@
-#define TR_SLALOM_STUB_R \
-    .leaf<StopNow>()
-
-#define TR_SLALOM_STUB_L \
+/* スラロームスタブ */
+/* スラロームスタブは左右で違いなし。モーター左右反転で対応可能 */
+#define TR_SLALOM_STUB \
     .composite<BrainTree::MemSequence>() \
         /* ライントレースから引継ぎして、直前の青線まで走る */ \
         .composite<BrainTree::ParallelSequence>(1,2) \

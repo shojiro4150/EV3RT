@@ -1,8 +1,6 @@
-/* Rコースのガレージ黄 */
-#define TR_BLOCK_R_R \
-
-/* Lコースのガレージ黄 */
-#define TR_BLOCK_R_L \
+/* ガレージ黄 */
+/* ガレージは左右で違いなし。モーター左右反転で対応可能 */
+#define TR_BLOCK_Y \
     .composite<BrainTree::MemSequence>() \
         .composite<BrainTree::ParallelSequence>(1,3) \
             .leaf<SetArmPosition>(10, 40) \
