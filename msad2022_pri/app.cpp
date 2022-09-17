@@ -24,7 +24,8 @@
 /* behavior tree stanza files */
 #include "tr_calibration.h"
 #include "tr_run.h"
-#include "tr_block.h"
+#include "tr_slalom.h"
+#include "tr_block_g.h"
 
 /* this is to avoid linker error, undefined reference to `__sync_synchronize' */
 extern "C" void __sync_synchronize() {}
@@ -51,6 +52,7 @@ BrainTree::BehaviorTree* tr_slalom_first      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_check      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_second_a      = nullptr;
 BrainTree::BehaviorTree* tr_slalom_second_b      = nullptr;
+BrainTree::BehaviorTree* tr_slalom_stub       = nullptr;
 BrainTree::BehaviorTree* tr_block_r     = nullptr;
 BrainTree::BehaviorTree* tr_block_g     = nullptr;
 BrainTree::BehaviorTree* tr_block_b     = nullptr;
@@ -379,7 +381,8 @@ public:
                 break;
             case CL_BLUE2:
                 if (cur_rgb.r <= 20 && cur_rgb.g <= 40 && cur_rgb.b >= 44 && cur_rgb.b - cur_rgb.r > 20) {
-//                if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {
+//                if (cur_rgb.r <= 25 && cur_rgb.g <= 55 && cur_rgb.b >= 55) {     /* shojiro */
+//                if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {    /* tanaka */
                     _log("ODO=%05d, CL_BLUE2 detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -618,7 +621,7 @@ class TraceLine : public BrainTree::Node {
 public:
     TraceLine(int s, int t, double p, double i, double d, double srew_rate, TraceSide trace_side) : speed(s),target(t),srewRate(srew_rate),side(trace_side) {
         updated = false;
-        ltPid = new PIDcalculator(p, i, d, PERIOD_UPD_TSK, -speed, speed);
+        ltPid = new PIDcalculatorOld(p, i, d, PERIOD_UPD_TSK, -speed, speed);
     }
     ~TraceLine() {
         delete ltPid;
@@ -658,7 +661,7 @@ public:
     }
 protected:
     int speed, target;
-    PIDcalculator* ltPid;
+    PIDcalculatorOld* ltPid;
     double srewRate;
     TraceSide side;
     bool updated;
@@ -1036,6 +1039,7 @@ void main_task(intptr_t unused) {
         tr_slalom_check = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_CHECK_R .build();
         tr_slalom_second_a = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_A_R .build();
         tr_slalom_second_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_B_R .build();
+        tr_slalom_stub = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_STUB_R.build();
         tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_R_R .build();
         tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G_R .build();
         tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_B_R .build();
@@ -1053,6 +1057,7 @@ void main_task(intptr_t unused) {
         tr_slalom_check = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_CHECK_L .build();
         tr_slalom_second_a = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_A_L .build();
         tr_slalom_second_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_SECOND_B_L .build();
+        tr_slalom_stub = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_SLALOM_STUB_L.build();
         tr_block_r = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_R_L .build();
         tr_block_g = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_G_L .build();
         tr_block_b = (BrainTree::BehaviorTree*) BrainTree::Builder() TR_BLOCK_B_L .build();
@@ -1120,16 +1125,17 @@ void main_task(intptr_t unused) {
     }
 
     /* destroy behavior tree */
-    delete tr_block_r;
-    delete tr_block_g;
-    delete tr_block_b;
-    delete tr_block_y;
-    delete tr_block_d;
     delete tr_block_d2;
-    delete tr_slalom_first;
-    delete tr_slalom_check;
-    delete tr_slalom_second_a;
+    delete tr_block_d;
+    delete tr_block_y;
+    delete tr_block_b;
+    delete tr_block_g;
+    delete tr_block_r;
+    delete tr_slalom_stub;
     delete tr_slalom_second_b;
+    delete tr_slalom_second_a;
+    delete tr_slalom_check;
+    delete tr_slalom_first;
     delete tr_run;
     delete tr_calibration;
     /* destroy profile object */
@@ -1224,26 +1230,30 @@ void update_task(intptr_t unused) {
                         _log("State changed: ST_CALIBRATION to ST_SLALOM_SECOND_B");
                         break;
                     case 5:
+                        state = ST_SLALOM_STUB;
+                        _log("State changed: ST_CALIBRATION to ST_SLALOM_STUB");
+                        break;
+                    case 6:
                         state = ST_BLOCK_R;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_R");
                         break;
-                    case 6:
+                    case 7:
                         state = ST_BLOCK_G;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_G");
                         break;
-                    case 7:
+                    case 8:
                         state = ST_BLOCK_B;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_B");
                         break;
-                    case 8:
+                    case 9:
                         state = ST_BLOCK_Y;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_Y");
                         break;
-                    case 9:
+                    case 10:
                         state = ST_BLOCK_D;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
                         break;
-                    case 10:
+                    case 11:
                         state = ST_BLOCK_D2;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK_D");
                         break;
@@ -1500,7 +1510,7 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
             case BrainTree::Node::Status::Failure:
                 state = ST_ENDING;
-                _log("State changed: ST_BLOCK_D to ST_ENDING");
+                _log("State changed: ST_BLOCK_D2 to ST_ENDING");
                 break;
             default:
                 break;

@@ -30,6 +30,7 @@ using namespace ev3api;
 #include "FIR.hpp"
 #include "Plotter.hpp"
 #include "PIDcalculator.hpp"
+#include "PIDcalculatorOld.hpp"
 
 /* global variables */
 extern FILE*        bt;
@@ -163,6 +164,7 @@ enum State {
     ST_SLALOM_CHECK,
     ST_SLALOM_SECOND_A,
     ST_SLALOM_SECOND_B,
+    ST_SLALOM_STUB,
     ST_BLOCK_R,
     ST_BLOCK_G,
     ST_BLOCK_B,
