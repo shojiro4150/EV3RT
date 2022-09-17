@@ -225,7 +225,7 @@ class IsAngleLarger : public BrainTree::Node {
 public:
     IsAngleLarger(int ang) : angle(ang) {}
     Status update() override {
-        int32_t curAngle = gyroSensor->getAngle(); 
+        int32_t curAngle = gyroSensor->getAngle();
         if (curAngle >= angle){
             return Status::Success;
         } else {
@@ -246,7 +246,7 @@ class IsAngleSmaller : public BrainTree::Node {
 public:
     IsAngleSmaller(int ang) : angle(ang) {}
     Status update() override {
-        int32_t curAngle = gyroSensor->getAngle(); 
+        int32_t curAngle = gyroSensor->getAngle();
         if (curAngle <= angle){
             return Status::Success;
         } else {
@@ -276,7 +276,7 @@ public:
             updated = true;
         }
         int32_t deltaDist = plotter->getDistance() - originalDist;
-        
+
         if ((deltaDist >= deltaDistTarget) || (-deltaDist <= -deltaDistTarget)) {
             if (!earned) {
                 _log("ODO=%05d, Delta distance %d is earned.", plotter->getDistance(), deltaDistTarget);
@@ -349,13 +349,13 @@ public:
 
         switch(color){
             case CL_JETBLACK:
-                if (cur_rgb.r <=35 && cur_rgb.g <=35 && cur_rgb.b <=50) { 
+                if (cur_rgb.r <=35 && cur_rgb.g <=35 && cur_rgb.b <=50) {
                     _log("ODO=%05d, CL_JETBLACK detected.", plotter->getDistance());
                     return Status::Success;
                 }
                 break;
             case CL_JETBLACK_YMNK:
-                if (cur_rgb.r <=8 && cur_rgb.g <=8 && cur_rgb.b <=8) { 
+                if (cur_rgb.r <=8 && cur_rgb.g <=8 && cur_rgb.b <=8) {
                     _log("ODO=%05d, CL_JETBLACK_YMNK detected.", plotter->getDistance());
                     return Status::Success;
                 }
@@ -380,10 +380,16 @@ public:
                 }
                 break;
             case CL_BLUE2:
-                if (cur_rgb.r <= 20 && cur_rgb.g <= 40 && cur_rgb.b >= 44 && cur_rgb.b - cur_rgb.r > 20) {
-//                if (cur_rgb.r <= 25 && cur_rgb.g <= 55 && cur_rgb.b >= 55) {     /* shojiro */
-//                if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {    /* tanaka */
+                if (cur_rgb.r <= 20 && cur_rgb.g <= 40 && cur_rgb.b >= 44 && cur_rgb.b - cur_rgb.r > 20) {  /* tanaka */
+//                if (cur_rgb.r <= 20 && cur_rgb.g <= 55 && cur_rgb.b >= 55 && cur_rgb.b - cur_rgb.r > 20) {
                     _log("ODO=%05d, CL_BLUE2 detected.", plotter->getDistance());
+                    return Status::Success;
+                }
+                break;
+            case CL_BLUE_CAM:
+                if (cur_rgb.r <= 25 && cur_rgb.g <= 55 && cur_rgb.b >= 55) {    /* shojiro */
+//                if (cur_rgb.r <= 20 && cur_rgb.g <= 40 && cur_rgb.b >= 44 && cur_rgb.b - cur_rgb.r > 20) {
+                    _log("ODO=%05d, CL_BLUE_CAM detected.", plotter->getDistance());
                     return Status::Success;
                 }
                 break;
@@ -424,7 +430,7 @@ public:
                     garageColor = CL_GREEN_SL;
                     _log("ODO=%05d, CL_GREEN_SL detected.", plotter->getDistance());
                     return Status::Success;
-                }   
+                }
                 break;
             case CL_GRAY:
                 if (cur_rgb.r >= 45 && cur_rgb.g <=60 && cur_rgb.b <= 65 && cur_rgb.r <= 52 && cur_rgb.b >= 53) {
@@ -472,7 +478,7 @@ public:
             _log("ODO=%05d, Junction scan started.", plotter->getDistance());
              updated = true;
         }
-	
+
 	int roe = video->getRangeOfEdges();
 	//_log("ODO=%05d, roe = %d", plotter->getDistance(), roe);
 
@@ -582,7 +588,7 @@ public:
         int8_t backward, turn, pwmL, pwmR;
 	int theta = video->getTheta();
 	//_log("ODO=%05d, theta = %d", plotter->getDistance(), theta);
-	
+
         /* compute necessary amount of steering by PID control */
         turn = (-1) * ltPid->compute(theta, 0); /* 0 is the center */
 	//_log("ODO=%05d, turn = %d", plotter->getDistance(), turn);
@@ -682,8 +688,8 @@ public:
         if (_COURSE == -1) {
             int pwm = pwmL;
             pwmL = pwmR;
-            pwmR = pwm;            
-        }     
+            pwmR = pwm;
+        }
     }
     Status update() override {
         if (!updated) {
@@ -747,7 +753,7 @@ public:
         }
         if (clockwise * deltaDegree < clockwise * deltaDegreeTarget) {
             if ((srewRate != 0.0) && (clockwise * deltaDegree >= clockwise * deltaDegreeTarget - 5)) {
-                /* when comes to the half-way, start decreazing the speed by tropezoidal motion */    
+                /* when comes to the half-way, start decreazing the speed by tropezoidal motion */
                 leftMotor->setPWM(clockwise * 3);
                 rightMotor->setPWM(-clockwise * 3);
             } else {
@@ -767,7 +773,7 @@ private:
     double srewRate;
 };
 
-class ClimbBoard : public BrainTree::Node { 
+class ClimbBoard : public BrainTree::Node {
 public:
     ClimbBoard(int direction, int count) : dir(direction), cnt(count) {}
     Status update() override {
@@ -993,10 +999,10 @@ void main_task(intptr_t unused) {
     } else {
       _COURSE = 1;
     }
- 
+
     /* FIR parameters for a low-pass filter with normalized cut-off frequency of 0.2
         using a function of the Hamming Window */
-    const int FIR_ORDER = 4; 
+    const int FIR_ORDER = 4;
     const double hn[FIR_ORDER+1] = { 7.483914270309116e-03, 1.634745733863819e-01, 4.000000000000000e-01, 1.634745733863819e-01, 7.483914270309116e-03 };
     /* set filters to FilteredColorSensor */
     Filter *lpf_r = new FIR_Transposed(hn, FIR_ORDER);
@@ -1069,7 +1075,7 @@ void main_task(intptr_t unused) {
 
     /* start sub-threads not managed by ASP */
     _log("starting sub-threads...");
-    sigset_t ss;  
+    sigset_t ss;
     sigemptyset(&ss);
     sigaddset(&ss, SIGUSR2);
     sigaddset(&ss, SIGALRM);
@@ -1087,7 +1093,7 @@ void main_task(intptr_t unused) {
     thds.emplace_back(vshow_thd(), iUnused);
     thds.emplace_back(vcal_thd(), iUnused);
     pthread_sigmask(SIG_UNBLOCK, &ss, 0); /* let ASP manage the main thread */
-    
+
     /* register cyclic handler to EV3RT */
     _log("starting update task...");
     sta_cyc(CYC_UPD_TSK);
@@ -1117,7 +1123,7 @@ void main_task(intptr_t unused) {
 	 (int)(*std::min_element(std::begin(upd_interval),std::end(upd_interval))),
 	 (int)(std::accumulate(std::begin(upd_interval),std::end(upd_interval),0) / upd_process_count));
 #endif
-    
+
     /* join the sub-threads */
     _log("joining sub-threads...");
     for (auto& t : thds) {
@@ -1157,7 +1163,7 @@ void main_task(intptr_t unused) {
     delete ev3clock;
     // temp fix 2022/6/20 W.Taniguchi, as Bluetooth not implemented yet
     //fclose(bt);
-#if defined(MAKE_SIM)    
+#if defined(MAKE_SIM)
     ETRoboc_notifyCompletedToSimulator();
 #endif
     ext_tsk();
@@ -1309,7 +1315,7 @@ void update_task(intptr_t unused) {
     case ST_SLALOM_CHECK:
         if (tr_slalom_check != nullptr) {
             status = tr_slalom_check->update();
-            switch (status) {       
+            switch (status) {
             case BrainTree::Node::Status::Success:
                 if (DetectSlalomPattern::isSlalomPatternA == true) {
                     // for test
@@ -1527,7 +1533,7 @@ void update_task(intptr_t unused) {
         }
         state = ST_END;
         _log("State changed: ST_ENDING to ST_END");
-        break;    
+        break;
     case ST_INITIAL:    /* do nothing */
     case ST_END:        /* do nothing */
     default:            /* do nothing */

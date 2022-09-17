@@ -140,6 +140,7 @@ enum Color {
     CL_BLUE,
     CL_BLUE_SL,
     CL_BLUE2,
+    CL_BLUE_CAM,
     CL_RED,
     CL_RED_SL,
     CL_YELLOW,
