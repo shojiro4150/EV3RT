@@ -1343,70 +1343,6 @@ void update_task(intptr_t unused) {
             }
         }
         break;
-    case ST_SLALOM_STUB:
-        if (tr_slalom_stub != nullptr) {
-            status = tr_slalom_stub->update();
-            switch (status) {
-            case BrainTree::Node::Status::Success:
-                switch (JUMP_BLOCK) { /* JUMP_BLOCK = 1... is for testing only */
-                    case 1:
-                        state = ST_BLOCK_R;
-                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_R");
-                        break;
-                    case 2:
-                        state = ST_BLOCK_G;
-                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_G");
-                        break;
-                    case 3:
-                        state = ST_BLOCK_B;
-                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_B");
-                        break;
-                    case 4:
-                        state = ST_BLOCK_Y;
-                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_Y");
-                        break;
-                    case 5:
-                        state = ST_BLOCK_D;
-                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_D");
-                        break;
-                    case 6:
-                        state = ST_BLOCK_D2;
-                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_D2");
-                        break;
-                    case 7:
-                        state = ST_ENDING;
-                        _log("State changed: ST_SLALOM_STUB to ST_ENDING");
-                        break;
-                    //go to appropiate garage logic based on color
-                    default:
-                        if (gGarageColor == CL_RED_SL) {
-                            state = ST_BLOCK_R;
-                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_R");
-                        }
-                        if (gGarageColor == CL_GREEN_SL) {
-                            state = ST_BLOCK_G;
-                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_G");
-                        }
-                        if (gGarageColor == CL_BLUE_SL) {
-                            state = ST_BLOCK_B;
-                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_B");
-                        }
-                        if (gGarageColor == CL_YELLOW_SL) {
-                            state = ST_BLOCK_Y;
-                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_Y");
-                        }
-                        break;
-                }
-                break;
-            case BrainTree::Node::Status::Failure:
-                state = ST_ENDING;
-                _log("State changed: ST_SLALOM_STUB to ST_ENDING");
-                break;
-            default:
-                break;
-            }
-        }
-        break;
     case ST_SLALOM_FIRST:
         if (tr_slalom_first != nullptr) {
             status = tr_slalom_first->update();
@@ -1597,6 +1533,70 @@ void update_task(intptr_t unused) {
                 break;
             }
         }
+    case ST_SLALOM_STUB:
+        if (tr_slalom_stub != nullptr) {
+            status = tr_slalom_stub->update();
+            switch (status) {
+            case BrainTree::Node::Status::Success:
+                switch (JUMP_BLOCK) { /* JUMP_BLOCK = 1... is for testing only */
+                    case 1:
+                        state = ST_BLOCK_R;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_R");
+                        break;
+                    case 2:
+                        state = ST_BLOCK_G;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_G");
+                        break;
+                    case 3:
+                        state = ST_BLOCK_B;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_B");
+                        break;
+                    case 4:
+                        state = ST_BLOCK_Y;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_Y");
+                        break;
+                    case 5:
+                        state = ST_BLOCK_D;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_D");
+                        break;
+                    case 6:
+                        state = ST_BLOCK_D2;
+                        _log("State changed: ST_SLALOM_STUB to ST_BLOCK_D2");
+                        break;
+                    case 7:
+                        state = ST_ENDING;
+                        _log("State changed: ST_SLALOM_STUB to ST_ENDING");
+                        break;
+                    //go to appropiate garage logic based on color
+                    default:
+                        if (gGarageColor == CL_RED_SL) {
+                            state = ST_BLOCK_R;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_R");
+                        }
+                        if (gGarageColor == CL_GREEN_SL) {
+                            state = ST_BLOCK_G;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_G");
+                        }
+                        if (gGarageColor == CL_BLUE_SL) {
+                            state = ST_BLOCK_B;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_B");
+                        }
+                        if (gGarageColor == CL_YELLOW_SL) {
+                            state = ST_BLOCK_Y;
+                            _log("State changed: ST_SLALOM_STUB to ST_BLOCK_Y");
+                        }
+                        break;
+                }
+                break;
+            case BrainTree::Node::Status::Failure:
+                state = ST_ENDING;
+                _log("State changed: ST_SLALOM_STUB to ST_ENDING");
+                break;
+            default:
+                break;
+            }
+        }
+        break;
     case ST_BLOCK_R:
         if (tr_block_r != nullptr) {
             status = tr_block_r->update();
