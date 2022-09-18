@@ -39,7 +39,7 @@
         /*スタブ用ライントレース１*/\
         .composite<BrainTree::ParallelSequence>(1,2)\
             .leaf<IsDistanceEarned>(1050)\
-            .leaf<TraceLine>(40, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)\
+            .leaf<TraceLine>(45, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_OPPOSITE)\
         .end()\
         /*スタブ用回転*/\
         .composite<BrainTree::ParallelSequence>(1,2) \
